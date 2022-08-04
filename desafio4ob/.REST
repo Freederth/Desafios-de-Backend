@@ -6,3 +6,6 @@ Content-Type: application/json
     "price": "200",
     "thumbnail": "imgurl"
 }
+
+# DELETE http://localhost:8080/api/productos/4 HTTP/1.1
+# content-type: application/json

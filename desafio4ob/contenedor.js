@@ -65,10 +65,8 @@ class Contenedor {
 			const producto = dataArchivo.find(producto => producto.id === id);
 			if (producto) {
 				return producto;
-				//	console.log(producto);
 			} else {
-				console.log("No se encontró producto");
-				return null;
+				return { error: "producto no encontrado" };
 			}
 		} catch (error) {
 			console.log("no existe el id", error);
@@ -95,21 +93,20 @@ class Contenedor {
 			const dataArchivo = await this.readFileFunction(this.ruta);
 			let producto = dataArchivo.find(producto => producto.id === id);
 			if (producto) {
-				const dataArchPaseFiltrado = dataArchivo.filter(
-					producto => producto.id !== id
+				const dataArchParseFiltrado = dataArchivo.filter(
+					prod => prod.id !== id
 				);
 				await fs.promises.writeFile(
 					this.ruta,
-					JSON.stringify(dataArchPaseFiltrado, null, 2),
+					JSON.stringify(dataArchParseFiltrado, null, 2),
 					"utf-8"
 				);
 				console.log("Producto eliminado");
 			} else {
 				console.log("No se encontró producto");
-				return null;
 			}
 		} catch (error) {
-			console.log("no existe el id", error);
+			console.log("No existe el id", error);
 		}
 	}
 }

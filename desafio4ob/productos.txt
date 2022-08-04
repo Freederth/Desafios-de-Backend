@@ -18,9 +18,9 @@
     "id": 3
   },
   {
-    "id": 4,
-    "title": "Producto 4",
-    "price": "200",
-    "thumbnail": "imgurl"
+    "title": "guante",
+    "price": "50",
+    "thumbnail": "",
+    "id": 5
   }
 ]
