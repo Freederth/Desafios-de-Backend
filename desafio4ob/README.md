@@ -14,5 +14,6 @@ nodemon server.js
 - POST 'api/productos/:id' recibe y agrega un producto, y lo devuelve con su id.
 - PUT 'api/productos/:id' recive y actualiza un producto según su id.
 - DELETE 'api/productos/:id' elimina un producto según su id.
+- Puedes subir un objeto con el formulario del index.html
 
 ### Isabel Achurra, 2022.
