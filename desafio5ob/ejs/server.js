@@ -35,7 +35,7 @@ app.get("/productos", async (req, res) => {
 app.post("/productos", async (req, res) => {
 	const objProducto = req.body;
 	contenedor.save(objProducto);
-	res.json({ message: "Producto guardado", objProducto });
+	res.redirect("/productos");
 });
 
 app.listen(port, err => {
