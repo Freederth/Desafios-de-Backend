@@ -12,9 +12,19 @@ app.set("views", "./views");
 
 app.use(express.static("public"));
 
-app.get("/productos", async (req, res) => {
+app.get("/", async (req, res) => {
 	const producto = await contenedor.getAll();
 	res.render("index", {
+		titulo: "Útiles escolares 2022",
+		listaProductos: producto,
+		hayLista: true,
+		producto: true
+	});
+});
+
+app.get("/productos", async (req, res) => {
+	const producto = await contenedor.getAll();
+	res.render("partials/productos", {
 		titulo: "Útiles escolares 2022",
 		listaProductos: producto,
 		hayLista: true,

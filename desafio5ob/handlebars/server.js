@@ -9,21 +9,32 @@ const port = process.env.PORT || 8080;
 const contenedor = new Contenedor("./productos.txt");
 
 app.set("view engine", "hbs");
-app.set("views", "./views");
+app.set("views", "./views/layouts");
+
+app.use(express.static("public"));
 
 app.engine(
 	"hbs",
 	handlebars.engine({
 		extname: ".hbs",
-		defaultLayout: "index.hbs",
-		layoutsDir: __dirname + "/views",
+		defaultLayout: "",
+		layoutsDir: "",
 		partialsDir: __dirname + "/views/partials"
 	})
 );
 
-app.get("/productos", async (req, res) => {
+app.get("/", async (req, res) => {
 	const producto = await contenedor.getAll();
 	res.render("index", {
+		list: producto,
+		listExist: true,
+		producto: true
+	});
+});
+
+app.get("/productos", async (req, res) => {
+	const producto = await contenedor.getAll();
+	res.render("productos", {
 		titulo: "Útiles escolares 2022",
 		list: producto,
 		listExist: true,

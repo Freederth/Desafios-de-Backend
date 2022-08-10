@@ -1,6 +1,5 @@
 <div class="titulo d-flex justify-content-center">
     <h2><%= titulo %></h2>
-    <a href="/productos" class="btn btn-dark mx-5">Productos</a>
     <br>
 </div>
 <div class="container">
@@ -11,7 +10,7 @@
                     <img src=<%= val.thumbnail %> class="card-img-top imagen" style="max-width:18rem">
                     <div class="card-body">
                         <h5 class="card-title"><%= val.title %></h5>
-                        <p class="card-text"><%= val.price %></p>
+                        <p class="card-text">$<%= val.price %></p>
                     </div>
                 </div>
             <% }); %>

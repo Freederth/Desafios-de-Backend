@@ -17,31 +17,13 @@
     </div>
 
 <br>
+<div class="container">
     {{>form}}
-
     <br>
+    <a href="/productos" class="btn btn-dark">Ver todos los productos</a>
+</div>
 
-    {{> title }}
-        <div class="container">
-         {{#if listExist}}
-            <div class="d-flex p-2 bd-highlight flex-wrap">
-                {{#each list}}
-                   <div class="card " style="width: 18rem; margin: 1rem;">
-                        <img src="{{thumbnail}}" class="card-img-top" alt="{{thumbnail}}">
-                        <div class="card-body">
-                            <h5 class="card-title">{{title}}</h5>
-                            <p class="card-text">$ {{price}}</p>
-                    </div>
-                    </div>
-                {{/each}}
-            </div>
-        {{else}}
-            <div class="d-flex p-2 bd-highlight flex-wrap">
-                <h1>No se encontraron elementos</h1>
-            </div>
-        {{/if}}
-       </div>
-    </div>
+
 
     {{> footer }}
 
