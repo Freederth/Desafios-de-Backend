@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "mail": "dcosta@gmail.com",
+    "mensaje": "hola",
+    "fecha": "1:57:42 AM"
+  },
+  {
+    "id": 2,
+    "mail": "jaraneda@gmail.com",
+    "mensaje": "hola diego",
+    "fecha": "1:57:43 AM"
+  },
+  {
+    "id": 3,
+    "mail": "dcosta@gmail.com",
+    "mensaje": "hola jaime",
+    "fecha": "1:57:44 AM"
+  },
+  {
+    "id": 4,
+    "mail": "alo@alo.cl",
+    "mensaje": "hola diego y jaime",
+    "fecha": "1:58:45 AM"
+  },
+  {
+    "id": 5,
+    "mail": "a@sa.c",
+    "mensaje": "hola chicos",
+    "fecha": "2:00:48 AM"
+  }
+]
