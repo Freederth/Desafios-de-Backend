@@ -103,7 +103,7 @@ routerProductos.delete("/:id", async (req, res) => {
 // 404 de productos
 routerProductos.get("*", async (req, res) => {
 	res.json({
-		error: 404,
+		error: -2,
 		description: "Ruta no implementada"
 	});
 });
@@ -165,7 +165,7 @@ routerCarrito.delete("/:idCart/productos/:idProduct", async (req, res) => {
 // 404 de carritos
 routerCarrito.get("*", async (req, res) => {
 	res.json({
-		error: 404,
+		error: -2,
 		description: "Ruta no implementada"
 	});
 });
