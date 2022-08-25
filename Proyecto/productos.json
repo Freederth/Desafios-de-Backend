@@ -1,0 +1,51 @@
+[
+	{
+		"nombre": "Perrito",
+		"precio": "200",
+		"descripcion": "Perrito",
+		"codigo": "perrito",
+		"foto": "https://cdn3.iconfinder.com/data/icons/animals-105/150/icon_animal_cachorro-512.png",
+		"id": 1,
+		"timestamp": "2020-01-01",
+		"stock": "4"
+	},
+	{
+		"nombre": "Goma",
+		"precio": "5",
+		"descripcion": "Goma de borrar",
+		"foto": "https://cdn1.iconfinder.com/data/icons/office-171/32/office-04-512.png",
+		"id": 2,
+		"timestamp": "2020-01-01",
+		"stock": "80"
+	},
+	{
+		"nombre": "Wawa",
+		"precio": "50",
+		"descripcion": "una wawa",
+		"codigo": "wawa",
+		"foto": "https://cdn3.iconfinder.com/data/icons/fruits-52/150/icon_fruit_cerejas-512.png",
+		"id": 3,
+		"timestamp": "2020-01-01",
+		"stock": "10"
+	},
+	{
+		"nombre": "Espada Camelot",
+		"precio": "540",
+		"descripcion": "una espada de Camelot",
+		"codigo": "espada",
+		"foto": "https://m.media-amazon.com/images/I/51oN9fUB6cL._AC_SX425_.jpg",
+		"id": 4,
+		"timestamp": "2020-01-01",
+		"stock": "6"
+	},
+	{
+		"nombre": "Ratoncito",
+		"precio": "60",
+		"descripcion": "un ratoncito",
+		"codigo": "ratoncito",
+		"foto": "https://www.elblogdetubebe.com/wp-content/uploads/2020/04/cartas-del-Ratoncito-P%C3%A9rez-768x515.jpg",
+		"id": 5,
+		"timestamp": "2020-01-01",
+		"stock": "10"
+	}
+]
