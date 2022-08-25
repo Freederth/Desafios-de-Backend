@@ -5,6 +5,12 @@
 Para utilizar y probar el programa, se ejecuta
 
 ```
+npm install
+```
+
+y luego
+
+```
 nodemon server.js
 ```
 
