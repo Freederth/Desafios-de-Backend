@@ -1,32 +1,32 @@
 [
-  {
-    "title": "Perrito",
-    "price": "200",
-    "thumbnail": "https://cdn3.iconfinder.com/data/icons/animals-105/150/icon_animal_cachorro-512.png",
-    "id": 1
-  },
-  {
-    "title": "Goma",
-    "price": "5",
-    "thumbnail": "https://cdn1.iconfinder.com/data/icons/office-171/32/office-04-512.png",
-    "id": 2
-  },
-  {
-    "title": "Wawa",
-    "price": "50",
-    "thumbnail": "https://cdn3.iconfinder.com/data/icons/fruits-52/150/icon_fruit_cerejas-512.png",
-    "id": 3
-  },
-  {
-    "title": "Espada Camelot",
-    "price": "540",
-    "thumbnail": "https://m.media-amazon.com/images/I/51oN9fUB6cL._AC_SX425_.jpg",
-    "id": 4
-  },
-  {
-    "title": "Ratoncito",
-    "price": "60",
-    "thumbnail": "https://www.elblogdetubebe.com/wp-content/uploads/2020/04/cartas-del-Ratoncito-P%C3%A9rez-768x515.jpg",
-    "id": 5
-  }
+	{
+		"title": "Perrito",
+		"price": "200",
+		"thumbnail": "https://cdn3.iconfinder.com/data/icons/animals-105/150/icon_animal_cachorro-512.png",
+		"id": 1
+	},
+	{
+		"title": "Goma",
+		"price": "5",
+		"thumbnail": "https://cdn1.iconfinder.com/data/icons/office-171/32/office-04-512.png",
+		"id": 2
+	},
+	{
+		"title": "Wawa",
+		"price": "50",
+		"thumbnail": "https://cdn3.iconfinder.com/data/icons/fruits-52/150/icon_fruit_cerejas-512.png",
+		"id": 3
+	},
+	{
+		"title": "Espada Camelot",
+		"price": "540",
+		"thumbnail": "https://m.media-amazon.com/images/I/51oN9fUB6cL._AC_SX425_.jpg",
+		"id": 4
+	},
+	{
+		"title": "Ratoncito",
+		"price": "60",
+		"thumbnail": "https://www.elblogdetubebe.com/wp-content/uploads/2020/04/cartas-del-Ratoncito-P%C3%A9rez-768x515.jpg",
+		"id": 5
+	}
 ]

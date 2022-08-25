@@ -21,6 +21,6 @@ nodemon server.js
   -- DELETE '/:id' Vacía un carrito y lo elimina por id.
   -- GET '/:id/productos' Lista todos los productos guardados en ese carrito.
   -- DELETE '/:id/productos/:id_producto' Elimina un producto del carrito por su id.
-- Variable booleana de admin para usuario true or false para llegar a las rutas que son sólo admin.
+- Variable booleana de admin para usuario true or false para llegar a las rutas que son sólo admin, está hardcodeada en server.js.
 
 ### Isabel Achurra, 2022.
