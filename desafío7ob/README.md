@@ -8,7 +8,13 @@ Para utilizar y probar el programa, se ejecuta
 npm install
 ```
 
-y luego
+luego subir MariaDB en Xampp y ejecutar el archivo
+
+```
+node crearTablas.js
+```
+
+y finalmente
 
 ```
 nodemon server.js
