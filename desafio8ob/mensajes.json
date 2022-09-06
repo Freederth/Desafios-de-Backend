@@ -1,0 +1,133 @@
+[{
+  "_id": {
+    "$oid": "631799bf7e9c5e87b323b6c2"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "pepe@gmail.com",
+  "mensaje": "hola"
+},{
+  "_id": {
+    "$oid": "631799bf7e9c5e87b323b6c3"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "juan@gmail.com",
+  "mensaje": "hola pepe"
+},{
+  "_id": {
+    "$oid": "631799bf7e9c5e87b323b6c4"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "diego@gmail.com",
+  "mensaje": "soy maradona"
+},{
+  "_id": {
+    "$oid": "631799bf7e9c5e87b323b6c5"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "pepe@gmail.com",
+  "mensaje": "vos no sos maradona"
+},{
+  "_id": {
+    "$oid": "631799bf7e9c5e87b323b6c6"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "juan@gmail.com",
+  "mensaje": "dale respetá"
+},{
+  "_id": {
+    "$oid": "631799bf7e9c5e87b323b6c7"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "mod@pagina.com",
+  "mensaje": "por utilizar lenguaje que incita al odio, estás baneado diego."
+},{
+  "_id": {
+    "$oid": "63179a8f7e9c5e87b323b6c8"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "pepe@gmail.com",
+  "mensaje": "bue, al fin se fue ese troll"
+},{
+  "_id": {
+    "$oid": "63179a8f7e9c5e87b323b6c9"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "juan@gmail.com",
+  "mensaje": "que no se pueda tener un ambiente tranquilo en internet ya, tremendo boludo"
+},{
+  "_id": {
+    "$oid": "63179a8f7e9c5e87b323b6ca"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "pepe@gmail.com",
+  "mensaje": "y ahora que no hay nadie, me tenés coca"
+},{
+  "_id": {
+    "$oid": "63179a8f7e9c5e87b323b6cb"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "juan@gmail.com",
+  "mensaje": "si viejo, tengo bolsita de $800, $1500 y de $2000"
+},{
+  "_id": {
+    "$oid": "63179a8f7e9c5e87b323b6cc"
+  },
+  "fecha": {
+    "$timestamp": {
+      "t": 0,
+      "i": 0
+    }
+  },
+  "mail": "pepe@gmail.com",
+  "mensaje": "dale, dame la de 2 lucas"
+}]
