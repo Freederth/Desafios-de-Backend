@@ -17,5 +17,6 @@
   - Cambiar a 0 el stock de todos los prodcutso mayores a 4000.
   - Eliminación de todos los productos que tengan precio menor a 1000.
 - Crear usuario "pepe" con contraseña "asd456" y rol sólo lectura de datos ecommerce. Pepe no puede alterar ninguna información.
+- Todas las queries están en el archivo ./queries.md
 
 ### Isabel Achurra, 2022.
