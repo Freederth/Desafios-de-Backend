@@ -1,45 +1,77 @@
-import * as Mongoose from "mongoose";
-import * as dotenv from "dotenv";
-import { productosModel, carritosModel } from "../model/all.model.js";
-dotenv.config();
+//npm i mongoose
+const mongoose = require("mongoose");
 
-let database;
-const connect = async () => {
-	// Add your own uri below, here my dbname is UserDB
-	// and we are using the local mongodb
-	try {
-		const url = "mongodb://localhost:27017/ecommerce";
-		await mongoose.connect(url, {
+class ContenedorMongoDB {
+	constructor(url, modelo) {
+		this.url = url;
+		this.modelo = modelo;
+		this.connexion();
+	}
+
+	async connexion() {
+		await mongoose.connect(this.url, {
 			useNewUrlParser: true,
 			useUnifiedTopology: true
 		});
-		console.log("MongoDb conectado");
-	} catch (error) {
-		console.error(`error de conexion: ${error}`);
+		console.log("MongoDB: base de datos conectada");
 	}
 
-	if (database) {
-		return;
-	}
-	// In order to fix all the deprecation warnings,
-	// below are needed while connecting
-	Mongoose.connect(url);
-
-	database = Mongoose.connection;
-
-	return {
-		productosModel,
-		carritosModel
-	};
-};
-
-// Safer way to get disconnected
-const disconnect = () => {
-	if (!database) {
-		return;
+	async save(obj) {
+		try {
+			let guardar = await new this.modelo(obj).save();
+			return guardar._id.toString();
+		} catch (error) {
+			console.log(`error al guardar: ${error}`);
+		} finally {
+		}
 	}
 
-	Mongoose.disconnect();
-};
+	// traer producto por id
+	async getById(id) {
+		try {
+			let datos = await this.modelo.findOne({ _id: id });
+			let newDatos = { ...datos._doc, id: datos._id.toString() };
+			return newDatos;
+		} catch (error) {
+			return `No se pudo traer producto ${id}. ${error}`;
+		} finally {
+		}
+	}
 
-module.exports = { connect, disconnect };
+	//traer todos los productos
+	async getAll() {
+		try {
+			let datos = await this.modelo.find({});
+			let newDatos = datos.map(el => {
+				return { ...el._doc, id: el._id.toString() };
+			});
+			return newDatos;
+		} catch (error) {
+			console.log(`error al listar: ${error}`);
+			return [];
+		} finally {
+		}
+	}
+
+	// eliminar producto por id
+	async deleteById(id) {
+		try {
+			let datos = await this.modelo.deleteOne({ _id: id });
+			return datos;
+		} catch (error) {
+			console.log(`error al eliminar: ${error}`);
+		} finally {
+		}
+	}
+
+	async updateById(obj) {
+		try {
+			await this.modelo.updateOne({ _id: obj.id }, { $set: { ...obj } });
+			return obj.id;
+		} catch (error) {
+			console.log(`error al actualizar: ${error}`);
+		}
+	}
+}
+
+module.exports = ContenedorMongoDB;

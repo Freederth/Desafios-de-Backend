@@ -1,2 +1,3 @@
-const conexionMDB = require("./src/utils/mongoconnect");
-const conexionFB = require("./src/utils/firebaseconnect");
+/* ------------ MONGO DB ------------ */
+
+const mongodbConfig = "mongodb://localhost:27017/ecommerce";

@@ -135,4 +135,4 @@ class CarritoDaoArchivo extends ContenedorArchivo {
 	}
 }
 
-module.exports = { CarritoDaoArchivo };
+module.exports = CarritoDaoArchivo;

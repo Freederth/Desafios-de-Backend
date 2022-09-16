@@ -8,4 +8,4 @@ class ProductoDaoArchivo extends ContenedorArchivo {
 	//agregar método específico de carrito
 }
 
-module.exports = { ProductoDaoArchivo };
+module.exports = ProductoDaoArchivo;
