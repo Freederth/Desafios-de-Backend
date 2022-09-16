@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-class Contenedor {
+class ContenedorArchivo {
 	constructor(ruta) {
 		this.ruta = ruta;
 	}
@@ -82,7 +82,6 @@ class Contenedor {
 				return dataArchivo;
 			} else {
 				console.log("No hay productos");
-				return dataArchivo;
 			}
 		} catch (error) {
 			console.log("error de lectura", error);
@@ -112,4 +111,4 @@ class Contenedor {
 	}
 }
 
-module.exports = { Contenedor };
+module.exports = { ContenedorArchivo };

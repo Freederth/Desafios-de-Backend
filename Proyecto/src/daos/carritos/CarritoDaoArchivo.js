@@ -1,42 +1,10 @@
-const fs = require("fs");
+const { ContenedorArchivo } = require("../../contenedores/ContenedorArchivo");
 
-class ContenedorCarro {
-	constructor(ruta) {
-		this.ruta = ruta;
+class CarritoDaoArchivo extends ContenedorArchivo {
+	constructor() {
+		super("../../data/carritos.json");
 	}
-
-	async readFileFunction(ruta) {
-		let archivo = await fs.promises.readFile(ruta, "utf8");
-		let archivoParsed = await JSON.parse(archivo);
-		return archivoParsed;
-	}
-
-	async save(obj) {
-		try {
-			let dataArchivo = await this.readFileFunction(this.ruta);
-			if (dataArchivo.length) {
-				// [].length = 0 -> false
-				await fs.promises.writeFile(
-					this.ruta,
-					JSON.stringify(
-						[...dataArchivo, { ...obj, id: dataArchivo.length + 1 }],
-						null,
-						2
-					)
-				);
-				// ... spread operator -> copia el array y lo agrega al final
-			} else {
-				await fs.promises.writeFile(
-					this.ruta,
-					JSON.stringify([{ ...obj, id: dataArchParse.length + 1 }], null, 2)
-				);
-				console.log(`El archivo tiene id: ${dataArchivo.length + 1}`);
-			}
-		} catch (error) {
-			console.log("error de escritura", error);
-		}
-	}
-
+	//agregar método específico de carrito
 	// actualizar producto por id
 	async updateById(id, carrito) {
 		carrito.id = id;
@@ -167,4 +135,4 @@ class ContenedorCarro {
 	}
 }
 
-module.exports = { ContenedorCarro };
+module.exports = { CarritoDaoArchivo };
