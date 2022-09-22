@@ -79,7 +79,7 @@ const messageSchema = [
 
 const normalizedMessages = normalize(messages, messageSchema);
 // console.log(JSON.stringify("tamaño después: " + normalizedMessages).length);
-// 33 bytes
+// 33 bytes .
 
 fs.writeFileSync(
 	"./normalizedMessage.json",
