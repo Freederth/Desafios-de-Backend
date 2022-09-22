@@ -18,17 +18,13 @@ class Contenedor {
 				// [].length = 0 -> false
 				await fs.promises.writeFile(
 					this.ruta,
-					JSON.stringify(
-						[...dataArchivo, { ...obj, id: dataArchivo.length + 1 }],
-						null,
-						2
-					)
+					JSON.stringify([...dataArchivo, { ...obj }], null, 2)
 				);
 				// ... spread operator -> copia el array y lo agrega al final
 			} else {
 				await fs.promises.writeFile(
 					this.ruta,
-					JSON.stringify([{ ...obj, id: dataArchParse.length + 1 }], null, 2)
+					JSON.stringify([{ ...obj }], null, 2)
 				);
 				console.log(`El archivo tiene id: ${dataArchivo.length + 1}`);
 			}

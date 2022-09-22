@@ -5,7 +5,7 @@ const express = require("express");
 const handlebars = require("express-handlebars");
 
 const productosRandoms = generadorProductos();
-const comentarios = new Contenedor("./ecommerce/chat.json");
+const comentarios = new Contenedor("./ecommerce/mensajesSinNormalizar.json");
 
 const { Server: HttpServer } = require("http");
 const { Server: IoServer } = require("socket.io");

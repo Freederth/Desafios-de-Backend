@@ -1,69 +1,9 @@
 const { normalize, denormalize, schema } = require("normalizr");
 const fs = require("fs");
+const mensajesSinNormalizar = require("./mensajesSinNormalizar.json");
 
 // **-- Mensajes --**
-const messages = [
-	{
-		author: {
-			id: "dcosta@gmail.com",
-			nombre: "Diego",
-			apellido: "Costa",
-			edad: "32",
-			alias: "dcosta_32",
-			avatar:
-				"https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/man5-512.png"
-		},
-		text: "hola"
-	},
-	{
-		author: {
-			id: "jaraneda@gmail.com",
-			nombre: "Jaime",
-			apellido: "Araneda",
-			edad: "26",
-			alias: "jaraneda_26",
-			avatar:
-				"https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/man5-512.png"
-		},
-		text: "hola diego, como estás?"
-	},
-	{
-		author: {
-			id: "dcosta@gmail.com",
-			nombre: "Diego",
-			apellido: "Costa",
-			edad: "32",
-			alias: "dcosta_32",
-			avatar:
-				"https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/man5-512.png"
-		},
-		text: "hola jaime, todo bien y vos?"
-	},
-	{
-		author: {
-			id: "jgaete@gmail.com",
-			nombre: "Juan",
-			apellido: "Gaete",
-			edad: "28",
-			alias: "jgaete_28",
-			avatar:
-				"https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/man5-512.png"
-		},
-		text: "eh chicos, que onda?"
-	},
-	{
-		author: {
-			id: "mfernandez@gmail.com",
-			nombre: "Maya",
-			apellido: "Fernandez",
-			edad: "49",
-			alias: "mfernandez_49",
-			avatar:
-				"https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/woman5-512.png"
-		},
-		text: "dale dejen de sacar la vuelta, a trabajar!"
-	}
-];
+const messages = mensajesSinNormalizar;
 // console.log(JSON.stringify("tamaño antes: " + messages).length);
 //95 bytes
 
@@ -82,8 +22,6 @@ const normalizedMessages = normalize(messages, messageSchema);
 // 33 bytes .
 
 fs.writeFileSync(
-	"./normalizedMessage.json",
-	JSON.stringify(normalizedMessages)
+	"./ecommerce/chat.json",
+	JSON.stringify(normalizedMessages.result)
 );
-
-fs.writeFileSync("./chat.json", JSON.stringify(normalizedMessages.result));

@@ -4,7 +4,7 @@ const render = mensajesChat => {
 	let chat = document.querySelector("#chat");
 	let html = mensajesChat.map(mens => {
 		return `<li>
-        <strong style="color:blue"> ${mens.author}</strong> </strong>
+        <strong style="color:blue"> ${mens.author.id}</strong> </strong>
         <em style="color:green"> ${mens.text} </em>
         </li>`;
 	});
@@ -12,7 +12,7 @@ const render = mensajesChat => {
 };
 
 const addMessage = evt => {
-	const mail = document.querySelector("#mail").value;
+	const id = document.querySelector("#mail").value;
 	const nombre = document.querySelector("#nombre").value;
 	const apellido = document.querySelector("#apellido").value;
 	const edad = document.querySelector("#edad").value;
@@ -21,7 +21,7 @@ const addMessage = evt => {
 	const text = document.querySelector("#text").value;
 
 	const chatText = {
-		author: { mail, nombre, apellido, edad, alias, avatar },
+		author: { id, nombre, apellido, edad, alias, avatar },
 		text
 	};
 	// console.log(chatText);
