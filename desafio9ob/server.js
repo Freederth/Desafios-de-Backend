@@ -1,11 +1,15 @@
 const { Contenedor } = require("./utils/contenedor");
 const { generadorProductos } = require("./utils/generadorProducto");
+const exec = require("child_process").exec;
 
 const express = require("express");
 const handlebars = require("express-handlebars");
 
 const productosRandoms = generadorProductos();
-const comentarios = new Contenedor("./ecommerce/mensajesSinNormalizar.json");
+const leerComentarios = new Contenedor("./ecommerce/chat.json");
+const guardarComentarios = new Contenedor(
+	"./ecommerce/mensajesSinNormalizar.json"
+);
 
 const { Server: HttpServer } = require("http");
 const { Server: IoServer } = require("socket.io");
@@ -21,7 +25,7 @@ const port = process.env.PORT || 8080;
 // ** Mensajes----------------
 // ----------------------------INICIO
 io.on("connection", async socket => {
-	let mensajesChat = await comentarios.getAll();
+	let mensajesChat = await leerComentarios.getAll();
 	console.log("Se contectó un usuario");
 
 	const text = {
@@ -39,9 +43,15 @@ io.on("connection", async socket => {
 		};
 
 		io.sockets.emit("mensaje-servidor", text);
-		await comentarios.save({
+		await guardarComentarios.save({
 			author: msg.author,
 			text: msg.text
+		});
+		exec("node ./ecommerce/mensajes.js", async (err, stdout, stderr) => {
+			if (err !== null) {
+				console.error(`error de exec: ${err}`);
+			}
+			return (mensajesChat = await leerComentarios.getAll());
 		});
 	});
 });
@@ -50,7 +60,7 @@ io.on("connection", async socket => {
 // -------------------------------- INICIO Mensajes cambios por json.
 app.get("/api/mensajes/:id", async (req, res) => {
 	const { id } = req.params;
-	const productoById = await comentarios.getById(id);
+	const productoById = await productos.getById(id);
 	productoById
 		? res.json(productoById)
 		: res.json({ error: "Producto no encontrado" });
@@ -58,20 +68,35 @@ app.get("/api/mensajes/:id", async (req, res) => {
 
 app.put("/api/mensajes/:id", async (req, res) => {
 	const { id } = req.params;
-	const respuesta = await comentarios.updateById(id, req.body);
+	const respuesta = await guardarComentarios.updateById(id, req.body);
 	res.json(respuesta);
-	texts = await comentarios.getAll();
+	exec("node ./ecommerce/mensajes.js", async (err, stdout, stderr) => {
+		if (err !== null) {
+			console.error(`error de exec: ${err}`);
+		}
+		return (texts = await leerComentarios.getAll());
+	});
 });
 
 app.delete("/api/mensajes/:id", async (req, res) => {
 	const { id } = req.params;
-	res.json(await comentarios.deleteById(id));
-	texts = await comentarios.getAll();
+	res.json(await guardarComentarios.deleteById(id));
+	exec("node ./ecommerce/mensajes.js", async (err, stdout, stderr) => {
+		if (err !== null) {
+			console.error(`error de exec: ${err}`);
+		}
+		return (texts = await leerComentarios.getAll());
+	});
 });
 
 app.delete("/api/texts", async (req, res) => {
-	res.json(await comentarios.deleteAll());
-	texts = await comentarios.getAll();
+	res.json(await guardarComentarios.deleteAll());
+	exec("node ./ecommerce/mensajes.js", async (err, stdout, stderr) => {
+		if (err !== null) {
+			console.error(`error de exec: ${err}`);
+		}
+		return (texts = await leerComentarios.getAll());
+	});
 });
 // -------------------------------- FIN Mensajes cambios por json.
 

@@ -1,20 +1,8 @@
 [
-	{
-		"author": "dcosta@gmail.com",
-		"text": "hola"
-	},
-	{
-		"author": "jaraneda@gmail.com",
-		"text": "hola diego, como estás?"
-	},
-	{
-		"author": "dcosta@gmail.com",
-		"text": "hola jaime, todo bien y vos?"
-	},
-	{
-		"author": "jgaete@gmail.com",
-		"text": "eh chicos, que onda?"
-	},
+	{ "author": "dcosta@gmail.com", "text": "hola" },
+	{ "author": "jaraneda@gmail.com", "text": "hola diego, como estás?" },
+	{ "author": "dcosta@gmail.com", "text": "hola jaime, todo bien y vos?" },
+	{ "author": "jgaete@gmail.com", "text": "eh chicos, que onda?" },
 	{
 		"author": "mfernandez@gmail.com",
 		"text": "dale dejen de sacar la vuelta, a trabajar!"

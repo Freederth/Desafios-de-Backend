@@ -4,7 +4,7 @@ const render = mensajesChat => {
 	let chat = document.querySelector("#chat");
 	let html = mensajesChat.map(mens => {
 		return `<li>
-        <strong style="color:blue"> ${mens.author.id}</strong> </strong>
+        <strong style="color:blue"> ${mens.author}</strong> </strong>
         <em style="color:green"> ${mens.text} </em>
         </li>`;
 	});
