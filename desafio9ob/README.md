@@ -2,21 +2,10 @@
 
 #### Backend CoderHouse
 
-Para utilizar y probar el programa, se ejecuta
+Para utilizar y probar el programa, se ejecutan los siguientes comandos:
 
 ```
 npm install
-```
-
-luego ejecutar
-
-```
-node crearTablas.js
-```
-
-y finalmente
-
-```
 nodemon server.js
 ```
 
