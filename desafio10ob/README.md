@@ -1,12 +1,6 @@
-# Desafío obligatorio 10: MOCKS Y NORMALIZACIÓN
+# Desafío obligatorio 10: LOG-IN POR FORMULARIO
 
 #### Backend CoderHouse
-
-Para utilizar y probar el programa, se ejecutan los siguientes comandos:
-
-## DEMO:
-
-https://user-images.githubusercontent.com/10873846/191872834-72a8b6d9-348f-41d0-926f-e08b13378f17.mp4
 
 Para utilizar y probar el programa, se ejecutan los siguientes comandos:
 
