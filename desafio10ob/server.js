@@ -70,12 +70,13 @@ app.get("/", (req, res) => {
 	}
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
 	const sess = req.session;
 	const { username, password } = req.body;
 	sess.username = username;
 	sess.password = password;
-	res.redirect("/");
+
+	await res.redirect("/");
 });
 app.get("/logout", (req, res) => {
 	req.session.destroy(err => {
