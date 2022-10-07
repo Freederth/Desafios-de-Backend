@@ -4,7 +4,10 @@ const path = require("path");
 const handlebars = require("express-handlebars");
 const session = require("express-session");
 const cp = require("cookie-parser");
+
+// --- middleware ----------------
 const generadorProductos = require("./utils/generadorProducto");
+const loginCheck = require("./utils/loginCheck");
 
 const app = express();
 
@@ -13,6 +16,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 const PORT = process.env.PORT || 8080;
+
+// --- Creación de objetos con DAOS ----------------
 const productosRandom = generadorProductos();
 const { Carrito, Producto, Login, Chat } = require("./daos/index.js");
 
@@ -21,7 +26,7 @@ let Productos = new Producto();
 const Logins = new Login();
 const Chats = new Chat();
 
-Productos = productosRandom;
+Productos = Productos.save(productosRandom);
 
 app.set("view engine", "hbs");
 app.set("views", "./src/views/layouts");
@@ -124,9 +129,8 @@ app.post("/api/productos", loginCheck, async (req, res) => {
 		thumbnail,
 		timestamp
 	};
-	Productos.save(producto).then(data => {
-		res.json({ id: data });
-	});
+	await Productos.save(producto);
+	res.json({ id: data });
 });
 
 // PUT modifica 1 producto
