@@ -20,5 +20,6 @@ nodemon server.js
 - Vistas de error de login y register.
   - Registro: Usuario ya registrado.
   - Login: Usuario no registrado o contraseña incorrecta.
+- Todo lo demás se mantiene tal y como estaba en la segunda entraga de proyecto.
 
 ### Isabel Achurra, 2022.

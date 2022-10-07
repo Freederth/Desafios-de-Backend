@@ -2,7 +2,7 @@
 
 #### Backend CoderHouse
 
-- Para iniciar: `npm install` y luego `node server.js`
+- Para iniciar: `npm install` y luego `node {variable de entorno} server.js`
 - Endpoint en la ruta "localhost:8080"
 - Implementado CRUD en fs, mongo y firebase
   - Para diferenciar entre cada tipo de función, uso la la variable de entorno DAO, que puede tener 3 valores: "FS" (filesystem), "MONGO" (mongoDB) y "FB" (firebase).
