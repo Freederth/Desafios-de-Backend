@@ -4,19 +4,24 @@ const path = require("path");
 const handlebars = require("express-handlebars");
 const session = require("express-session");
 const cp = require("cookie-parser");
-const { faker } = require("@faker-js/faker");
+const generadorProductos = require("./utils/generadorProducto");
+
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
+const PORT = process.env.PORT || 8080;
+const productosRandom = generadorProductos();
 const { Carrito, Producto, Login, Chat } = require("./daos/index.js");
 
 const Carritos = new Carrito();
-const Productos = new Producto();
+let Productos = new Producto();
 const Logins = new Login();
 const Chats = new Chat();
+
+Productos = productosRandom;
 
 app.set("view engine", "hbs");
 app.set("views", "./src/views/layouts");
@@ -49,6 +54,7 @@ app.get("/register", (req, res) => {
 	}
 });
 
+// error de registro
 app.get("/failregister", (req, res) => {
 	if (req.session.name) {
 		res.redirect("/");
@@ -57,6 +63,7 @@ app.get("/failregister", (req, res) => {
 	}
 });
 
+// error de login
 app.get("/faillogin", (req, res) => {
 	if (req.session.name) {
 		res.redirect("/");
@@ -64,6 +71,33 @@ app.get("/faillogin", (req, res) => {
 		res.render("faillogin", {});
 	}
 });
+
+// post para registrarse
+app.post(
+	"/register",
+	passport.authenticate("registracion", {
+		failureRedirect: "/failregister",
+		failureMessage: true
+	}),
+	(req, res) => {
+		console.log("en post register");
+		const registerSuccess = "Registrado exitosamente. Ir a Login para ingresar";
+		res.redirect("/");
+	}
+);
+
+// post de login
+app.post(
+	"/login",
+	passport.authenticate("autenticacion", {
+		failureRedirect: "/faillogin",
+		failureMessage: true
+	}),
+	(req, res) => {
+		req.session.name = req.body.username;
+		res.redirect("/");
+	}
+);
 
 // GET trae 1 o todos los productos
 app.get("/api/productos/:id?", (req, res) => {
@@ -81,52 +115,42 @@ app.get("/api/productos/:id?", (req, res) => {
 });
 
 // POST crea 1 producto
-app.post("/api/productos", (req, res) => {
-	if (ADMINISTRADOR) {
-		let timestamp = Date.now();
-
-		Productos.save({ timestamp, ...req.body }).then(data => {
-			res.json({ id: data });
-		});
-	} else {
-		res.json({
-			error: -1,
-			descripcion: `ruta '${req.path}' método '${req.method}' no autorizada`
-		});
-	}
+app.post("/api/productos", loginCheck, async (req, res) => {
+	let timestamp = Date.now();
+	let { title, price, thumbnail } = req.body;
+	let producto = {
+		title,
+		price,
+		thumbnail,
+		timestamp
+	};
+	Productos.save(producto).then(data => {
+		res.json({ id: data });
+	});
 });
 
 // PUT modifica 1 producto
-app.put("/api/productos/:id", (req, res) => {
-	if (ADMINISTRADOR) {
-		const { id } = req.params;
-		let timestamp = Date.now();
-
-		Productos.updateById({ id: id, timestamp, ...req.body }).then(data => {
-			res.json({ id: data });
-		});
-	} else {
-		res.json({
-			error: -1,
-			descripcion: `ruta '${req.path}' método '${req.method}' no autorizada`
-		});
-	}
+app.put("/api/productos/:id", loginCheck, (req, res) => {
+	let timestamp = Date.now();
+	let { title, price, thumbnail } = req.body;
+	let producto = {
+		title,
+		price,
+		thumbnail,
+		timestamp
+	};
+	Productos.updateById(producto).then(data => {
+		res.json({ id: data });
+	});
 });
 
 // DELETE borra 1 producto
-app.delete("/api/productos/:id", (req, res) => {
-	if (ADMINISTRADOR) {
-		const { id } = req.params;
+app.delete("/api/productos/:id", loginCkeck, async (req, res) => {
+	const { id } = req.params;
 
-		Productos.deleteById(id).then(data => {
-			res.json({ delete: data });
-		});
-	} else {
-		res.json({
-			error: -1,
-			descripcion: `ruta '${req.path}' método '${req.method}' no autorizada`
-		});
-	}
+	Productos.deleteById(id).then(data => {
+		res.json({ delete: data });
+	});
 });
 
 /* ---------- /api/carrito ---------- */
@@ -134,11 +158,15 @@ app.delete("/api/productos/:id", (req, res) => {
 // POST crea 1 carrito
 app.post("/api/carrito", (req, res) => {
 	let timestamp = Date.now();
-
-	Carritos.save({ timestamp, productos: [] }).then(data => {
-		res.json({
-			id: data
-		});
+	let { title, price, thumbnail } = req.body;
+	let producto = {
+		title,
+		price,
+		thumbnail,
+		timestamp
+	};
+	Carritos.save(producto).then(data => {
+		res.json({ id: data });
 	});
 });
 
@@ -189,15 +217,22 @@ app.use("/api/*", (req, res) => {
 	});
 });
 
-// sin este PATH, no podes actualizar las paginas
+// sin este PATH, no puedes actualizar las paginas
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname + "/build/index.html"));
 });
 
-/* ------------ listener ------------ */
+/* ------------ CHAT ------------ */
+socketServer.on("connection", async socket => {
+	socket.emit("messages", await Chats.getAll());
+	socket.on("new_message", async mensaje => {
+		await Chats.metodoSave(mensaje);
+		let mensajes = await Chats.getAll();
+		socketServer.sockets.emit("messages", mensajes);
+	});
+});
 
-const PORT = process.env.PORT || 8080;
-
-app.listen(PORT, () => {
-	console.log(`Servidor http escuchando en el puerto ${server.address().PORT}`);
+//--------- listener
+httpServer.listen(PORT, () => {
+	console.log(`Corriendo server en el puerto ${PORT}!`);
 });
