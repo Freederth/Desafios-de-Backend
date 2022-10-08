@@ -1,8 +1,8 @@
 const loginCheck = (req, res, next) => {
-	if (!req.session.name) {
-		res.redirect("/login");
-	} else {
+	if (req.isAuthenticated()) {
 		return next();
+	} else {
+		res.redirect("/login");
 	}
 };
 module.exports = loginCheck;

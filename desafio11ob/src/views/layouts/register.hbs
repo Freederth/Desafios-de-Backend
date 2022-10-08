@@ -26,7 +26,7 @@
             <form class="mt-5">
                 <div class="form-group">
                     <label for="mail"></label>
-                    <input required="required" type="mail" class="form-control col-6" id="mail"
+                    <input required="required" type="email" class="form-control col-6" id="mail"
                         placeholder="Ingresa tu correo" />
                 </div>
                 <div class="form-group">
@@ -35,35 +35,32 @@
                         placeholder="Ingresa tu contraseña" />
                 </div>
 
-                        <div class="col-6" style="padding-top: 23px;">
-                            <input type="submit" class="btn btn-primary col-3" id="button" value="Registrarse" />
-                        </div>
+                <div class="col-6" style="padding-top: 23px;">
+                    <input type="submit" class="submit btn btn-primary col-3" id="button" value="Registrarse" />
+                </div>
 
 
             </form>
             <br>
         </div>
 
-        </div>
+    </div>
 
-        <div class="login container">
-            <p>¿Ya tienes tu cuenta?</p>
-            <a href="/login">Ingresar</a>
-        </div>
+    <div class="login container">
+        <p>¿Ya tienes tu cuenta?</p>
+        <a href="/login">Ingresar</a>
+    </div>
 
-        {{> footer }}
+    {{> footer }}
 
-        {{!-- boot strap --}}
-        <script>
-            const btn = document.getElementById("button");
-
-            btn.addEventListener("click", e => {
-	        e.preventDefault();
-
+    <script>
+        const btn = document.getElementById("button");
+        btn.addEventListener("click", e => {
+            e.preventDefault();
             const url = "http://localhost:8080/register";
             let mail = document.getElementById("mail").value;
             let password = document.getElementById("password").value;
-            {{!-- console.log({ mail, password }); --}}
+            console.log({ mail, password });
             return fetch(url, {
                 port: 8080,
                 method: "POST",
@@ -78,14 +75,14 @@
                 console.log(err);
             });
         });
-
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-            integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
-            integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
-            crossorigin="anonymous"></script>
+    </script>
+    {{!-- boot strap --}}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+        integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+        integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

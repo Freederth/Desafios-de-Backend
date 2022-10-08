@@ -15,25 +15,24 @@ const httpServer = new HttpServer(app);
 const io = new IoServer(httpServer);
 
 // --- middleware ----------------
+app.use(cp());
 const { generadorProductos } = require("./src/utils/generadorProducto");
 const loginCheck = require("./src/utils/loginCheck");
-app.use(cp());
 const passport = require("./src/utils/passportMiddleware");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 
-// --- Creación de objetos con DAOS ----------------
+// meter productosRandom en la base datos, en la colección productos
 const productosRandoms = generadorProductos();
 const { Carrito, Producto, Login, Chat } = require("./src/daos/index.js");
 
+// --- Creación de objetos con DAOS ----------------
 const Carritos = new Carrito();
 let Productos = new Producto();
-
-// meter productosRandom en la base datos, en la colección productos
 
 const Logins = new Login();
 const Chats = new Chat();
@@ -78,24 +77,31 @@ app.use(passport.initialize());
 // página de inicio, no dejar si no está logeado
 app.get("/", loginCheck, async (req, res) => {
 	const productos = await Productos.getAll();
-	res.render("index", { productos });
+	res.render(
+		"index",
+		{ productos },
+		{ mail: req.session.passport.sessions.mail }
+	);
 });
 
 // render login
 app.get("/login", (req, res) => {
-	if (req.session.name) {
-		res.redirect("/");
+	if (req.isAuthenticated()) {
+		const { mail } = req.mail;
+		console.log("usuario logueado");
+		res.render("index");
 	} else {
-		res.render("login.hbs", {});
+		console.log("user no logueado");
+		res.render("login");
 	}
 });
 
 // render register
 app.get("/register", (req, res) => {
-	if (req.session.name) {
-		res.redirect("/");
+	if (!req.isAuthenticated()) {
+		res.render("register");
 	} else {
-		res.render("register", {});
+		res.render("/");
 	}
 });
 
@@ -117,33 +123,51 @@ app.get("/faillogin", (req, res) => {
 	}
 });
 
+// post de login
+app.post(
+	"/login",
+	passport.authenticate("login", {
+		successRedirect: "/",
+		failureRedirect: "/faillogin"
+	}),
+	(req, res) => {
+		const { mail, password } = req.body;
+		res.redirect("/");
+	}
+);
+
 // post para registrarse
 app.post(
 	"/register",
-	passport.authenticate("registro", {
+	passport.authenticate("signup", {
 		failureRedirect: "/failregister",
 		failureMessage: true
 	}),
 	(req, res) => {
-		console.log("en post register");
-		const registerSuccess = "Registrado exitosamente. Ir a Login para ingresar";
 		res.redirect("/");
 	}
 );
 
-// post de login
-app.post(
-	"/login",
-	passport.authenticate("autenticacion", {
-		failureRedirect: "/faillogin",
-		failureMessage: true
-	}),
-	(req, res) => {
-		req.session.name = req.body.username;
-		res.redirect("/");
+// logout
+app.get("/logout", async (req, res) => {
+	// metodo debe ser delete
+	let username = req.session.passport.user.mail;
+	try {
+		req.session.destroy(err => {
+			if (err) {
+				return res.status(500).send(`<h1>No se pudo cerrar sesion</h1>`);
+			}
+		});
+		return res.json({ name: username, status: "destoyed" });
+	} catch (err) {
+		res.status(500).json({
+			success: false,
+			message: err.message
+		});
 	}
-);
+});
 
+// -------- PARTE PRODUCTOS -- INICIO ---------------
 app.get("/api/productos", async (req, res) => {
 	const producto = await productosRandoms;
 	// y también quiero que lea de la base de dato si hay algo
@@ -208,9 +232,9 @@ app.delete("/api/productos/:id", loginCheck, async (req, res) => {
 		res.json({ delete: data });
 	});
 });
+// -------- PARTE PRODUCTOS -- INICIO ---------------
 
-/* ---------- /api/carrito ---------- */
-
+// -------- PARTE CARRITOSS -- INICIO ---------------
 // POST crea 1 carrito
 app.post("/api/carrito", (req, res) => {
 	let timestamp = Date.now();
@@ -264,6 +288,7 @@ app.delete("/api/carrito/:id/productos/:id_prod", (req, res) => {
 		res.json(data);
 	});
 });
+// -------- PARTE CARRITOSS -- FIN ---------------
 
 // cualquier ruta que no exista
 app.use("/api/*", (req, res) => {

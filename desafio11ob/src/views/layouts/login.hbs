@@ -23,7 +23,7 @@
             <br>
             <h2 style="color:blue">Login</h2>
 
-            <form class="mt-5" >
+            <form class="mt-5">
                 <div class="form-group">
                     <label for="mail"></label>
                     <input required="required" type="email" class="form-control col-6" id="mail"
@@ -35,9 +35,9 @@
                         placeholder="Ingresa tu contraseña" />
                 </div>
 
-                        <div class="col-6" style="padding-top: 23px;">
-                            <input type="submit" class="btn btn-primary col-3" id="button" value="Ingresar" />
-                        </div>
+                <div class="col-6" style="padding-top: 23px;">
+                    <input type="submit" class="submit btn btn-primary col-3" id="button" value="Ingresar" />
+                </div>
 
 
             </form>
@@ -45,28 +45,25 @@
             <br>
         </div>
 
-        </div>
+    </div>
 
-        <div class="registrar container">
-            <p>¿Aún no tienes cuenta?</p>
-            <a href="/register">Regístrate</a>
-        </div>
+    <div class="registrar container">
+        <p>¿Aún no tienes cuenta?</p>
+        <a href="/register">Regístrate</a>
+    </div>
 
 
 
-        {{> footer }}
+    {{> footer }}
 
-        {{!-- boot strap --}}
-        <script>
-            const btn = document.getElementById("button");
-
-            btn.addEventListener("click", e => {
-	        e.preventDefault();
-
+    <script>
+        const btn = document.getElementById("button");
+        btn.addEventListener("click", e => {
+            e.preventDefault();
             const url = "http://localhost:8080/login";
             let mail = document.getElementById("mail").value;
             let password = document.getElementById("password").value;
-            {{!-- console.log({ mail, password }); --}}
+            console.log({ mail, password });
             return fetch(url, {
                 port: 8080,
                 method: "POST",
@@ -81,14 +78,15 @@
                 console.log(err);
             });
         });
+    </script>
 
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
-            integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
-            crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
-            integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
-            crossorigin="anonymous"></script>
+    {{!-- boot strap --}}
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
+        integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.min.js"
+        integrity="sha384-ODmDIVzN+pFdexxHEHFBQH3/9/vQ9uori45z4JjnFsRydbmQbmL5t1tQ0culUzyK"
+        crossorigin="anonymous"></script>
 </body>
 
 </html>

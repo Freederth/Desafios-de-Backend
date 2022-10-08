@@ -1,50 +1,75 @@
 const passport = require("passport");
 const bcrypt = require("bcrypt");
 const LocalStrategy = require("passport-local").Strategy;
-const mongoconnect = require("./mongoconnect");
 
 const contenedorLogin = require("../daos/login/LoginDaoMongoDB");
-const contenedorLog = new contenedorLogin();
+const users = new contenedorLogin();
 
-const connectMongo = (async () => {
-	await mongoconnect();
+// ---------------------- Utils -----------------------
+const isValidPassword = (mail, password) => {
+	return bcrypt.compareSync(password, mail.password);
+};
 
-	passport.use(
-		"registro",
-		new LocalStrategy(async (username, password, callback) => {
-			const user = await contenedorLog.getAll(username);
-			if (user.length !== 0)
-				return callback(null, false, {
-					message: "Already Registered"
-				});
-			const passwordBcrypt = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
-			contenedorLog.metodoSave(username, passwordBcrypt);
-			const nuevoUsuario = [{ username, password: passwordBcrypt }];
-			callback(null, nuevoUsuario);
-		})
-	);
+const createHash = password => {
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
+};
 
-	passport.use(
-		"autenticacion",
-		new LocalStrategy(async (username, password, callback) => {
-			const user = await contenedorLog.getAll(username);
-			console.log(username);
-			if (user.length === 0 || !bcrypt.compareSync(password, user[0].password))
-				return callback(null, false, {
-					message: "error"
-				});
-			callback(null, user);
-		})
-	);
+// ----------------- Serializers ----------------------
+passport.serializeUser(function (mail, done) {
+	console.log("serialize");
+	done(null, mail);
+});
 
-	passport.serializeUser((user, callback) => {
-		callback(null, user[0].username);
-	});
+passport.deserializeUser(function (mail, done) {
+	console.log("deserialize");
+	done(null, mail);
+});
 
-	passport.deserializeUser(async (username, callback) => {
-		const user = await contenedorLog.getAll(username);
-		callback(null, user);
-	});
-})();
+// ------------- Passport Middlewares -----------------
+passport.use(
+	"login",
+	new LocalStrategy(async (mail, password, done) => {
+		let user = await users.getByMail(mail);
+
+		if (!user) {
+			console.log(`No existe el usuario ${mail}`);
+			return done(null, false, { message: "User not found" });
+		}
+
+		if (!isValidPassword(mail, password)) {
+			console.log("Password incorrecto");
+			return done(null, false, { message: "Password incorrect" });
+		}
+
+		done(null, mail);
+	})
+);
+
+passport.use(
+	"signup",
+	new LocalStrategy(
+		{
+			passReqToCallback: true
+		},
+		async (req, mail, password, done) => {
+			let user = await users.getByMail(mail);
+
+			if (user) {
+				console.log(`El usuario ${mail} ya existe`);
+				return done(null, false, { message: "User already exists" });
+			}
+
+			let newUser = {
+				mail,
+				// password: createHash(password)
+				password
+			};
+
+			await users.save(newUser); // Grabar usuario en BD
+
+			return done(null, req.body);
+		}
+	)
+);
 
 module.exports = passport;

@@ -15,6 +15,16 @@ class LoginDaoMongoDB extends ContenedorMongodb {
 	constructor() {
 		super(mongoConnect, logins);
 	}
+
+	// getByMail
+	async getByMail(mail) {
+		const doc = await this.getCollection
+			.find({
+				mail: mail
+			})
+			.exec();
+		return doc;
+	}
 }
 
 module.exports = LoginDaoMongoDB;
