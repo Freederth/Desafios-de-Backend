@@ -16,48 +16,49 @@
 <body>
 
     <br>
-<div class="container" style="background-color:#e9ecef">
+    <div class="container" style="background-color:#e9ecef">
 
 
-    <h1 style="color:blue">Ingrese producto</h1>
-    <br>
+        <h1 style="color:blue">Ingrese producto</h1>
+        <br>
 
-    {{>form}}
-    <br>
-    {{> title }}
+        {{>form}}
+        <br>
+        {{> title }}
         <div class="container">
-        {{#if listExist}}
+            {{#if listExist}}
             <div class="d-flex p-2 bd-highlight flex-wrap">
 
 
-        <table class="table table-dark" style="border-color: white;">
-        <thead>
-        <tr>
-            <th scope="col"><b>Nombre</b> </th>
-            <th scope="col"><b>Precio</b> </th>
-            <th scope="col"> <b>Foto</b> </th>
-        </tr>
-        </thead>
-        <tbody>
-        {{#each list}}
-        <tr>
-            <td>{{title}}</td>
-            <td>${{price}}</td>
-            <td><img src="{{thumbnail}}" style="max-width: 5rem;" class="card-img-top" alt="{{thumbnail}}"></td>
-            {{/each}}
-        </tr>
-        </tbody>
-        </table>
+                <table class="table table-dark" style="border-color: white;">
+                    <thead>
+                        <tr>
+                            <th scope="col"><b>Nombre</b> </th>
+                            <th scope="col"><b>Precio</b> </th>
+                            <th scope="col"> <b>Foto</b> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each list}}
+                        <tr>
+                            <td>{{title}}</td>
+                            <td>${{price}}</td>
+                            <td><img src="{{thumbnail}}" style="max-width: 5rem;" class="card-img-top"
+                                    alt="{{thumbnail}}"></td>
+                            {{/each}}
+                        </tr>
+                    </tbody>
+                </table>
 
-        </div>
+            </div>
             {{else}}
             <div class="d-flex p-2 bd-highlight flex-wrap">
                 <h1>No se encontraron elementos</h1>
             </div>
             {{/if}}
         </div>
-</div>
-<br>
+    </div>
+    <br>
 
     <br>
     <div class="container" style="background-color:#e9ecef">
@@ -73,37 +74,13 @@
                     <input required="required" type="email" class="form-control col-6" id="mail"
                         placeholder="Ingresa tu correo" />
                 </div>
-                <div class="form-group">
-                    <label for="message"></label>
-                    <input required="required" type="text" class="form-control col-6" id="nombre"
-                        placeholder="Ingresa tu nombre" />
-                </div>
-                <div class="form-group">
-                    <label for="message"></label>
-                    <input required="required" type="text" class="form-control col-6" id="apellido"
-                        placeholder="Ingresa tu apellido" />
-                </div>
-                <div class="form-group">
-                    <label for="message"></label>
-                    <input required="required" type="number" class="form-control col-6" id="edad"
-                        placeholder="Ingresa tu edad" />
-                </div>
-                <div class="form-group">
-                    <label for="message"></label>
-                    <input required="required" type="text" class="form-control col-6" id="alias"
-                        placeholder="Ingresa tu alias" />
-                </div>
-                <div class="form-group">
-                    <label for="message"></label>
-                    <input required="required" type="text" class="form-control col-6" id="avatar"
-                        placeholder="Ingresa tu avatar" />
-                </div>
+
                 <div class="container">
                     <div class="row">
                         <div class="col-6">
                             <div class="form-group">
-                                <label for="text"></label>
-                                <input type="text" class="form-control" id="text" placeholder="Ingresa un mensaje" />
+                                <label for="msg"></label>
+                                <input type="msg" class="form-control" id="msg" placeholder="Ingresa un mensaje" />
                             </div>
                         </div>
                         <div class="col-6" style="padding-top: 23px;">
@@ -126,7 +103,44 @@
         {{> footer }}
 
         {{!-- boot strap --}}
-        <script src="client.js"></script>
+        <script>
+
+            const server = io().connect();
+
+            const render = mensajesChat => {
+                let chat = document.getElementById("chat");
+                let html = mensajesChat.map(mens => {
+                    let date = (mens.fecha._seconds * 1000);
+                    let formattedDate = new Date(date).toLocaleString()
+                    return `<li><strong style="color:blue"> ${mens.mail} </strong>
+                    [<span style="color:brown">${formattedDate}</span>]:
+                    <em style="color:green"> ${mens.msg} </em>
+                    </li>`;
+                }).sort((a, b) => {
+                    return a.fecha - b.fecha;
+                });;
+                // sort by fecha
+                chat.innerHTML = html.join("");
+            };
+
+            const addMessage = evt => {
+                const mail = document.querySelector("#mail").value;
+                let hora = new Date().toLocaleTimeString();
+                const mensaje = document.querySelector("#msg").value;
+
+                const chatText = { mail, fecha, mensaje };
+                server.emit("mensaje-nuevo", chatText, id => {
+                    console.log(id);
+                });
+
+                return false;
+            };
+
+            server.on("mensaje-servidor", mensaje => {
+                render(mensaje.mensajesChat);
+            });
+
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
             integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
             crossorigin="anonymous"></script>

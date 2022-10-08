@@ -1,5 +1,3 @@
-//npm i mongoose
-const mongoose = require("mongoose");
 const mongoConnect = require("../utils/mongoconnect");
 
 class ContenedorMongoDB {

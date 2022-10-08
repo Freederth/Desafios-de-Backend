@@ -10,13 +10,14 @@ const app = express();
 
 // --- WEBSOCKET
 const { Server: HttpServer } = require("http");
-const { Server: SocketServer } = require("socket.io");
+const { Server: IoServer } = require("socket.io");
 const httpServer = new HttpServer(app);
-const socketServer = new SocketServer(httpServer);
+const io = new IoServer(httpServer);
 
 // --- middleware ----------------
 const { generadorProductos } = require("./src/utils/generadorProducto");
 const loginCheck = require("./src/utils/loginCheck");
+app.use(cp());
 const passport = require("./src/utils/passportMiddleware");
 
 app.use(express.json());
@@ -60,7 +61,7 @@ app.use(
 				useUnifiedTopology: true
 			}
 		}),
-		secret: "emilio",
+		secret: "secreto",
 		resave: false,
 		rolling: true,
 		cookie: {
@@ -273,16 +274,36 @@ app.use("/api/*", (req, res) => {
 });
 
 /* ------------ CHAT ------------ */
-socketServer.on("connection", async socket => {
-	socket.emit("messages", await Chats.getAll());
-	socket.on("new_message", async mensaje => {
-		await Chats.metodoSave(mensaje);
-		let mensajes = await Chats.getAll();
-		socketServer.sockets.emit("messages", mensajes);
+io.on("connection", async socket => {
+	let mensajesChat = await Chats.getAll();
+	console.log("Se contectó un usuario");
+
+	const text = {
+		text: "ok",
+		mensajesChat
+	};
+
+	socket.emit("mensaje-servidor", text);
+
+	socket.on("mensaje-nuevo", async (msg, cb) => {
+		mensajesChat.push(msg);
+		const text = {
+			text: "mensaje nuevo",
+			mensajesChat
+		};
+
+		io.sockets.emit("mensaje-servidor", text);
+		await Chats.save({
+			mail,
+			msg,
+			fecha
+		});
+		return (mensajesChat = await Chats.getAll());
 	});
 });
+// ---------------------------- FIN
 
 //--------- listener
 httpServer.listen(PORT, () => {
-	console.log(`Corriendo server en el puerto ${PORT}!`);
+	console.log(`Server listening on ${PORT}`);
 });
