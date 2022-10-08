@@ -25,9 +25,9 @@
 
             <form class="mt-5">
                 <div class="form-group">
-                    <label for="Usuario"></label>
-                    <input required="required" type="text" class="form-control col-6" id="username"
-                        placeholder="Ingresa tu usuario" />
+                    <label for="mail"></label>
+                    <input required="required" type="mail" class="form-control col-6" id="mail"
+                        placeholder="Ingresa tu correo" />
                 </div>
                 <div class="form-group">
                     <label for="Password"></label>
@@ -36,7 +36,7 @@
                 </div>
 
                         <div class="col-6" style="padding-top: 23px;">
-                            <input type="submit" class="btn btn-primary col-3" id="button" value="Ingresar" />
+                            <input type="submit" class="btn btn-primary col-3" id="button" value="Registrarse" />
                         </div>
 
 
@@ -46,7 +46,7 @@
 
         </div>
 
-        <div class="login">
+        <div class="login container">
             <p>¿Ya tienes tu cuenta?</p>
             <a href="/login">Ingresar</a>
         </div>
@@ -61,14 +61,14 @@
 	        e.preventDefault();
 
             const url = "http://localhost:8080/register";
-            let email = document.getElementById("email").value;
+            let mail = document.getElementById("mail").value;
             let password = document.getElementById("password").value;
-            {{!-- console.log({ email, password }); --}}
+            {{!-- console.log({ mail, password }); --}}
             return fetch(url, {
                 port: 8080,
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ mail, password }),
                 // redirect to home
             }).then(res => {
                 if (res.status === 200) {

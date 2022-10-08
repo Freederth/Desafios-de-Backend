@@ -1,11 +1,11 @@
-const ContenedorMongodb = require("../../contenedores/ContenedorMongodb.js");
 const mongoose = require("mongoose");
-const { mongoConnect } = require("../../utils/mongoconnect.js");
+const ContenedorMongodb = require("../../contenedores/ContenedorMongodb.js");
+const mongoConnect = require("../../utils/mongoconnect.js");
 
 const loginsCollections = "login";
 
 const LoginSchema = new mongoose.Schema({
-	email: { type: String, require: true },
+	mail: { type: String, require: true },
 	password: { type: String, require: true }
 });
 

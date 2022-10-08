@@ -1,5 +1,6 @@
 //npm i mongoose
 const mongoose = require("mongoose");
+const mongoConnect = require("../utils/mongoconnect");
 
 class ContenedorMongoDB {
 	constructor(url, modelo) {
@@ -9,11 +10,7 @@ class ContenedorMongoDB {
 	}
 
 	async connexion() {
-		await mongoose.connect(this.url, {
-			useNewUrlParser: true,
-			useUnifiedTopology: true
-		});
-		console.log("MongoDB: base de datos conectada");
+		await mongoConnect();
 	}
 
 	async save(obj) {

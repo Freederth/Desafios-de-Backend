@@ -1,9 +1,9 @@
-const { ContenedorFirebase } = require("../../contenedores/ContenedorFirebase");
+const ContenedorFirebase = require("../../contenedores/ContenedorFirebase");
 
-class ChatFirebase extends ContenedorFirebase {
+class ChatDaoFirebase extends ContenedorFirebase {
 	constructor() {
 		super("chat");
 	}
 }
 
-module.exports = ChatFirebase;
+module.exports = ChatDaoFirebase;

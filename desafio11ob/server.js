@@ -2,14 +2,22 @@ const express = require("express");
 require("dotenv").config();
 const path = require("path");
 const handlebars = require("express-handlebars");
+const MongoStore = require("connect-mongo");
 const session = require("express-session");
 const cp = require("cookie-parser");
 
-// --- middleware ----------------
-const generadorProductos = require("./utils/generadorProducto");
-const loginCheck = require("./utils/loginCheck");
-
 const app = express();
+
+// --- WEBSOCKET
+const { Server: HttpServer } = require("http");
+const { Server: SocketServer } = require("socket.io");
+const httpServer = new HttpServer(app);
+const socketServer = new SocketServer(httpServer);
+
+// --- middleware ----------------
+const { generadorProductos } = require("./src/utils/generadorProducto");
+const loginCheck = require("./src/utils/loginCheck");
+const passport = require("./src/utils/passportMiddleware");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -18,15 +26,16 @@ app.use(express.static("public"));
 const PORT = process.env.PORT || 8080;
 
 // --- Creación de objetos con DAOS ----------------
-const productosRandom = generadorProductos();
-const { Carrito, Producto, Login, Chat } = require("./daos/index.js");
+const productosRandoms = generadorProductos();
+const { Carrito, Producto, Login, Chat } = require("./src/daos/index.js");
 
 const Carritos = new Carrito();
 let Productos = new Producto();
+
+// meter productosRandom en la base datos, en la colección productos
+
 const Logins = new Login();
 const Chats = new Chat();
-
-Productos = Productos.save(productosRandom);
 
 app.set("view engine", "hbs");
 app.set("views", "./src/views/layouts");
@@ -37,16 +46,46 @@ app.engine(
 		extname: ".hbs",
 		defaultLayout: "",
 		layoutsDir: "",
-		partialsDir: __dirname + "/views/partials"
+		partialsDir: __dirname + "/src/views/partials"
 	})
 );
+
+app.use(
+	session({
+		store: MongoStore.create({
+			mongoUrl:
+				"mongodb+srv://admin:chmod777@cluster0.z9jlepu.mongodb.net/?retryWrites=true&w=majority",
+			mongoOptions: {
+				useNewUrlParser: true,
+				useUnifiedTopology: true
+			}
+		}),
+		secret: "emilio",
+		resave: false,
+		rolling: true,
+		cookie: {
+			maxAge: 90000
+		},
+		saveUninitialized: false
+	})
+);
+
+// Passport
+app.use(passport.session());
+app.use(passport.initialize());
+
+// página de inicio, no dejar si no está logeado
+app.get("/", loginCheck, async (req, res) => {
+	const productos = await Productos.getAll();
+	res.render("index", { productos });
+});
 
 // render login
 app.get("/login", (req, res) => {
 	if (req.session.name) {
 		res.redirect("/");
 	} else {
-		res.render("login", {});
+		res.render("login.hbs", {});
 	}
 });
 
@@ -80,7 +119,7 @@ app.get("/faillogin", (req, res) => {
 // post para registrarse
 app.post(
 	"/register",
-	passport.authenticate("registracion", {
+	passport.authenticate("registro", {
 		failureRedirect: "/failregister",
 		failureMessage: true
 	}),
@@ -103,6 +142,18 @@ app.post(
 		res.redirect("/");
 	}
 );
+
+app.get("/api/productos", async (req, res) => {
+	const producto = await productosRandoms;
+	// y también quiero que lea de la base de dato si hay algo
+	const productosDB = await Productos.getAll();
+	const productosConRandoms = [...producto, ...productosDB];
+	res.render("productos", {
+		list: productosConRandoms,
+		listExist: true,
+		producto: true
+	});
+});
 
 // GET trae 1 o todos los productos
 app.get("/api/productos/:id?", (req, res) => {
@@ -149,7 +200,7 @@ app.put("/api/productos/:id", loginCheck, (req, res) => {
 });
 
 // DELETE borra 1 producto
-app.delete("/api/productos/:id", loginCkeck, async (req, res) => {
+app.delete("/api/productos/:id", loginCheck, async (req, res) => {
 	const { id } = req.params;
 
 	Productos.deleteById(id).then(data => {
@@ -219,11 +270,6 @@ app.use("/api/*", (req, res) => {
 		error: -2,
 		descripcion: `ruta '${req.path}' método '${req.method}' no implementada`
 	});
-});
-
-// sin este PATH, no puedes actualizar las paginas
-app.get("*", (req, res) => {
-	res.sendFile(path.join(__dirname + "/build/index.html"));
 });
 
 /* ------------ CHAT ------------ */
