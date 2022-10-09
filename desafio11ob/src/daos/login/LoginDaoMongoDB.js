@@ -17,13 +17,14 @@ class LoginDaoMongoDB extends ContenedorMongodb {
 	}
 
 	// getByMail
-	async getByMail(mail) {
-		const doc = await this.getCollection
-			.find({
-				mail: mail
-			})
-			.exec();
-		return doc;
+	async getByUser(username) {
+		const doc = await this.modelo.findOne({ username: username });
+		if (!doc) return null; //si no hay nada null
+		// retornar el objeto completo
+		return {
+			_id: doc._id,
+			username: doc.username
+		};
 	}
 }
 

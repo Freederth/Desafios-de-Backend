@@ -1,9 +1,13 @@
-const passport = require("passport");
 const bcrypt = require("bcrypt");
+const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 
-const contenedorLogin = require("../daos/login/LoginDaoMongoDB");
-const users = new contenedorLogin();
+const ContenedorLogin = require("../daos/login/LoginDaoMongoDB");
+const User = new ContenedorLogin();
+
+User.getAll().then(asdas => {
+	console.log(asdas);
+});
 
 // ---------------------- Utils -----------------------
 const isValidPassword = (mail, password) => {
@@ -15,33 +19,32 @@ const createHash = password => {
 };
 
 // ----------------- Serializers ----------------------
-passport.serializeUser(function (mail, done) {
+passport.serializeUser(function (user, done) {
 	console.log("serialize");
-	done(null, mail);
+	done(null, user._id);
 });
 
-passport.deserializeUser(function (mail, done) {
+passport.deserializeUser(async function (id, done) {
 	console.log("deserialize");
-	done(null, mail);
+	await User.getById(id, done);
 });
 
 // ------------- Passport Middlewares -----------------
 passport.use(
 	"login",
-	new LocalStrategy(async (mail, password, done) => {
-		let user = await users.getByMail(mail);
+	new LocalStrategy(async (username, password, done) => {
+		let user = await User.getByUser(username);
 
 		if (!user) {
-			console.log(`No existe el usuario ${mail}`);
+			console.log(`No existe el usuario ${username}`);
 			return done(null, false, { message: "User not found" });
 		}
-
-		if (!isValidPassword(mail, password)) {
+		if (!isValidPassword(user, password)) {
 			console.log("Password incorrecto");
 			return done(null, false, { message: "Password incorrect" });
 		}
 
-		done(null, mail);
+		done(null, user);
 	})
 );
 
@@ -51,23 +54,24 @@ passport.use(
 		{
 			passReqToCallback: true
 		},
-		async (req, mail, password, done) => {
-			let user = await users.getByMail(mail);
+		async (req, username, password, done) => {
+			let user = await User.getByUser(username);
+
+			const { name, email } = req.body;
 
 			if (user) {
-				console.log(`El usuario ${mail} ya existe`);
+				console.log(`El usuario ${username} ya existe`);
 				return done(null, false, { message: "User already exists" });
 			}
 
 			let newUser = {
-				mail,
-				// password: createHash(password)
-				password
+				username,
+				password: createHash(password)
 			};
 
-			await users.save(newUser); // Grabar usuario en BD
+			await User.save(newUser);
 
-			return done(null, req.body);
+			return done(null, newUser.id);
 		}
 	)
 );

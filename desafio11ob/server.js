@@ -1,6 +1,5 @@
 const express = require("express");
 require("dotenv").config();
-const path = require("path");
 const handlebars = require("express-handlebars");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
@@ -17,7 +16,7 @@ const io = new IoServer(httpServer);
 // --- middleware ----------------
 app.use(cp());
 const { generadorProductos } = require("./src/utils/generadorProducto");
-const loginCheck = require("./src/utils/loginCheck");
+const checkAuthentication = require("./src/utils/checkAuthentication");
 const passport = require("./src/utils/passportMiddleware");
 
 app.use(express.json());
@@ -64,18 +63,22 @@ app.use(
 		resave: false,
 		rolling: true,
 		cookie: {
+			htppOnly: false,
+			secure: false,
 			maxAge: 90000
 		},
+		rolling: true,
+		resave: true,
 		saveUninitialized: false
 	})
 );
 
 // Passport
-app.use(passport.session());
 app.use(passport.initialize());
+app.use(passport.session());
 
 // página de inicio, no dejar si no está logeado
-app.get("/", loginCheck, async (req, res) => {
+app.get("/", checkAuthentication, async (req, res) => {
 	const productos = await Productos.getAll();
 	res.render(
 		"index",
@@ -84,10 +87,11 @@ app.get("/", loginCheck, async (req, res) => {
 	);
 });
 
+// -------- LOGIN-INICIO ------------
 // render login
 app.get("/login", (req, res) => {
 	if (req.isAuthenticated()) {
-		const { mail } = req.mail;
+		let user = req.user;
 		console.log("usuario logueado");
 		res.render("index");
 	} else {
@@ -95,76 +99,58 @@ app.get("/login", (req, res) => {
 		res.render("login");
 	}
 });
-
-// render register
-app.get("/register", (req, res) => {
-	if (!req.isAuthenticated()) {
-		res.render("register");
-	} else {
-		res.render("/");
-	}
-});
-
-// error de registro
-app.get("/failregister", (req, res) => {
-	if (req.session.name) {
-		res.redirect("/");
-	} else {
-		res.render("failregister", {});
-	}
-});
-
-// error de login
-app.get("/faillogin", (req, res) => {
-	if (req.session.name) {
-		res.redirect("/");
-	} else {
-		res.render("faillogin", {});
-	}
-});
-
 // post de login
 app.post(
 	"/login",
 	passport.authenticate("login", {
 		successRedirect: "/",
-		failureRedirect: "/faillogin"
+		failureRedirect: "faillogin"
 	}),
+
 	(req, res) => {
-		const { mail, password } = req.body;
+		const { user } = req.user;
 		res.redirect("/");
 	}
 );
+// -------- LOGIN-FIN --------------
 
+// -------- REGISTER-INICIO --------
+// render register
+app.get("/register", (req, res) => {
+	res.render("register");
+});
 // post para registrarse
 app.post(
 	"/register",
 	passport.authenticate("signup", {
-		failureRedirect: "/failregister",
-		failureMessage: true
+		failureRedirect: "failregister",
+		successRedirect: "/login"
 	}),
 	(req, res) => {
+		const user = req.user;
 		res.redirect("/");
 	}
 );
+// -------- REGISTER-FIN -----------
+
+// error de registro
+app.get("/failregister", (req, res) => {
+	console.error("Error de registro");
+	// now redirect to failregister.hbs
+	res.render("failregister");
+});
+
+// error de login
+app.get("/faillogin", (req, res) => {
+	console.error("Error de login");
+	res.render("faillogin");
+});
 
 // logout
 app.get("/logout", async (req, res) => {
 	// metodo debe ser delete
-	let username = req.session.passport.user.mail;
-	try {
-		req.session.destroy(err => {
-			if (err) {
-				return res.status(500).send(`<h1>No se pudo cerrar sesion</h1>`);
-			}
-		});
-		return res.json({ name: username, status: "destoyed" });
-	} catch (err) {
-		res.status(500).json({
-			success: false,
-			message: err.message
-		});
-	}
+	req.logOut();
+	res.render("index");
 });
 
 // -------- PARTE PRODUCTOS -- INICIO ---------------
@@ -196,7 +182,7 @@ app.get("/api/productos/:id?", (req, res) => {
 });
 
 // POST crea 1 producto
-app.post("/api/productos", loginCheck, async (req, res) => {
+app.post("/api/productos", checkAuthentication, async (req, res) => {
 	let timestamp = Date.now();
 	let { title, price, thumbnail } = req.body;
 	let producto = {
@@ -210,7 +196,7 @@ app.post("/api/productos", loginCheck, async (req, res) => {
 });
 
 // PUT modifica 1 producto
-app.put("/api/productos/:id", loginCheck, (req, res) => {
+app.put("/api/productos/:id", checkAuthentication, (req, res) => {
 	let timestamp = Date.now();
 	let { title, price, thumbnail } = req.body;
 	let producto = {
@@ -225,7 +211,7 @@ app.put("/api/productos/:id", loginCheck, (req, res) => {
 });
 
 // DELETE borra 1 producto
-app.delete("/api/productos/:id", loginCheck, async (req, res) => {
+app.delete("/api/productos/:id", checkAuthentication, async (req, res) => {
 	const { id } = req.params;
 
 	Productos.deleteById(id).then(data => {

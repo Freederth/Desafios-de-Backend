@@ -23,20 +23,20 @@
             <br>
             <h2 style="color:blue">Login</h2>
 
-            <form class="mt-5">
+            <form method="POST" onsubmit="" action="/login" id="login" class="mt-5">
                 <div class="form-group">
-                    <label for="mail"></label>
-                    <input required="required" type="email" class="form-control col-6" id="mail"
-                        placeholder="Ingresa tu correo" />
+                    <label for="username"></label>
+                    <input required type="email" class="form-control col-6" id="username"
+                        placeholder="Ingresa tu usuario" />
                 </div>
                 <div class="form-group">
                     <label for="password"></label>
-                    <input required="required" type="password" class="form-control col-6" id="password"
+                    <input required type="password" class="form-control col-6" id="password" autocomplete="on"
                         placeholder="Ingresa tu contraseña" />
                 </div>
 
                 <div class="col-6" style="padding-top: 23px;">
-                    <input type="submit" class="submit btn btn-primary col-3" id="button" value="Ingresar" />
+                    <button type="submit" class="btn btn-success col-3" id="button">Ingresar</button>
                 </div>
 
 
@@ -58,17 +58,19 @@
 
     <script>
         const btn = document.getElementById("button");
+
         btn.addEventListener("click", e => {
             e.preventDefault();
+
             const url = "http://localhost:8080/login";
-            let mail = document.getElementById("mail").value;
+            let username = document.getElementById("username").value;
             let password = document.getElementById("password").value;
-            console.log({ mail, password });
+            console.log({ username, password });
             return fetch(url, {
                 port: 8080,
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mail, password }),
+                body: JSON.stringify({ username, password }),
                 // redirect to home
             }).then(res => {
                 if (res.status === 200) {
@@ -78,6 +80,7 @@
                 console.log(err);
             });
         });
+
     </script>
 
     {{!-- boot strap --}}
