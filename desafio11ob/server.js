@@ -80,11 +80,7 @@ app.use(passport.session());
 // página de inicio, no dejar si no está logeado
 app.get("/", checkAuthentication, async (req, res) => {
 	const productos = await Productos.getAll();
-	res.render(
-		"index",
-		{ productos },
-		{ mail: req.session.passport.sessions.mail }
-	);
+	res.render("index", { productos });
 });
 
 // -------- LOGIN-INICIO ------------
@@ -122,7 +118,7 @@ app.get("/register", (req, res) => {
 // post para registrarse
 app.post(
 	"/register",
-	passport.authenticate("signup", {
+	passport.authenticate("register", {
 		failureRedirect: "failregister",
 		successRedirect: "/login"
 	}),

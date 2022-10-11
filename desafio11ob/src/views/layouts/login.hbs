@@ -23,7 +23,7 @@
             <br>
             <h2 style="color:blue">Login</h2>
 
-            <form method="POST" onsubmit="" action="/login" id="login" class="mt-5">
+            <form action="/login" method="POST" id="login" class="mt-5">
                 <div class="form-group">
                     <label for="username"></label>
                     <input required type="email" class="form-control col-6" id="username"
@@ -36,7 +36,7 @@
                 </div>
 
                 <div class="col-6" style="padding-top: 23px;">
-                    <button type="submit" class="btn btn-success col-3" id="button">Ingresar</button>
+                    <input type="submit" class="btn btn-success col-3" id="button" value="Ingresar" />
                 </div>
 
 
@@ -55,33 +55,6 @@
 
 
     {{> footer }}
-
-    <script>
-        const btn = document.getElementById("button");
-
-        btn.addEventListener("click", e => {
-            e.preventDefault();
-
-            const url = "http://localhost:8080/login";
-            let username = document.getElementById("username").value;
-            let password = document.getElementById("password").value;
-            console.log({ username, password });
-            return fetch(url, {
-                port: 8080,
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, password }),
-                // redirect to home
-            }).then(res => {
-                if (res.status === 200) {
-                    window.location.href = "http://localhost:8080/";
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-        });
-
-    </script>
 
     {{!-- boot strap --}}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"

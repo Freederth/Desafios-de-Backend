@@ -13,8 +13,11 @@ class ContenedorMongoDB {
 
 	async save(obj) {
 		try {
-			let guardar = await new this.modelo(obj).save();
-			return guardar._id.toString();
+			let guardar = await new this.modelo(obj)
+				.save()
+				.then("objeto guardado")
+				.catch(err => console.log(err));
+			return guardar;
 		} catch (error) {
 			console.log(`error al guardar: ${error}`);
 		} finally {

@@ -24,7 +24,7 @@
             <br>
             <h2 style="color:blue">Registrarse</h2>
 
-            <form method="POST" onsubmit="" action="/register" id="register" class="mt-5">
+            <form action="/register" method="POST" id="register" class="mt-5">
                 <div class="form-group">
                     <label for="username"></label>
                     <input required type="email" class="form-control col-6" id="username"
@@ -37,7 +37,7 @@
                 </div>
 
                 <div class="col-6" style="padding-top: 23px;">
-                    <button type="submit" class="submit btn btn-success col-3" id="button">Registrarse</button>
+                    <input type="submit" class="submit btn btn-success col-3" id="button" value="Registrarse" />
                 </div>
 
 
@@ -54,29 +54,6 @@
 
     {{> footer }}
 
-    <script>
-        const btn = document.getElementById("button");
-        btn.addEventListener("click", e => {
-            e.preventDefault();
-            const url = "http://localhost:8080/register";
-            let mail = document.getElementById("username").value;
-            let password = document.getElementById("password").value;
-
-            return fetch(url, {
-                port: 8080,
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ mail, password }),
-                // redirect to home
-            }).then(res => {
-                if (res.status === 200) {
-                    window.location.href = "http://localhost:8080/login";
-                }
-            }).catch(err => {
-                console.log(err);
-            });
-        });
-    </script>
     {{!-- boot strap --}}
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.5/dist/umd/popper.min.js"
         integrity="sha384-Xe+8cL9oJa6tN/veChSP7q+mnSPaj5Bcu9mPX5F5xIGE0DVittaqT5lorf0EI7Vk"
