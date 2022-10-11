@@ -120,7 +120,7 @@ app.post(
 	"/register",
 	passport.authenticate("register", {
 		failureRedirect: "failregister",
-		successRedirect: "/login"
+		successRedirect: "login"
 	}),
 	(req, res) => {
 		const user = req.user;
