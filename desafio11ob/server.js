@@ -5,6 +5,9 @@ const handlebars = require("express-handlebars");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
 const cp = require("cookie-parser");
+const { fork } = require("child_process");
+
+const calculoPesado = require("./src/utils/calculo");
 
 const app = express();
 
@@ -24,7 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 8080;
 
 // meter productosRandom en la base datos, en la colección productos
 const productosRandoms = generadorProductos();
@@ -59,14 +62,13 @@ app.engine(
 app.use(
 	session({
 		store: MongoStore.create({
-			mongoUrl:
-				"mongodb+srv://admin:chmod777@cluster0.z9jlepu.mongodb.net/?retryWrites=true&w=majority",
+			mongoUrl: process.env.MONGODB_URL,
 			mongoOptions: {
 				useNewUrlParser: true,
 				useUnifiedTopology: true
 			}
 		}),
-		secret: "secreto",
+		secret: process.env.MONGODB_SECRETO || "secreto",
 		resave: false,
 		rolling: true,
 		saveUninitialized: false,
@@ -275,14 +277,6 @@ app.delete("/api/carrito/:id/productos/:id_prod", (req, res) => {
 });
 // -------- PARTE CARRITOSS -- FIN ---------------
 
-// cualquier ruta que no exista
-app.use("/api/*", (req, res) => {
-	res.json({
-		error: -2,
-		descripcion: `ruta '${req.path}' método '${req.method}' no implementada`
-	});
-});
-
 /* ------------ CHAT ------------ */
 io.on("connection", async socket => {
 	let mensajesChat = await Chats.getAll();
@@ -325,6 +319,17 @@ app.get("/info", (req, res) => {
 		cwd: cwd(),
 		pid,
 		execPath
+	});
+});
+
+// ----- Random PAGE ----
+app.get("/api/randoms", (req, res) => {
+	let { cant } = req.query;
+	console.log(cant);
+	const random = fork("./src/utils/calculo", [cant]);
+	random.send("start");
+	random.on("message", obj => {
+		res.json(obj);
 	});
 });
 
