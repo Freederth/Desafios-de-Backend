@@ -1,7 +1,7 @@
 const bcrypt = require("bcrypt");
 const passport = require("passport");
-
 const LocalStrategy = require("passport-local").Strategy;
+
 const UserContainer = require("../daos/login/LoginDaoMongoDB.js");
 const User = new UserContainer();
 
@@ -34,7 +34,7 @@ passport.use(
 			usernameField: "username",
 			passwordField: "password"
 		},
-		async (req, username, password, done) => {
+		async (username, password, done) => {
 			try {
 				const user = User.getByUser(username);
 				if (!user) return done(null, false, { message: "user not found" });
@@ -64,10 +64,10 @@ passport.use(
 					console.log(`El usuario ${username} ya existe`);
 					return done(null, user.username, { message: "user ya existe" });
 				} else {
-					const newUser = new User({
+					const newUser = {
 						username: username,
 						password: createHash(password)
-					});
+					};
 					try {
 						await User.save(newUser);
 					} catch (error) {
