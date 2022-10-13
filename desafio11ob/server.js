@@ -37,11 +37,11 @@ let Productos = new Producto();
 const Logins = new Login();
 const Chats = new Chat();
 
-// const User = new Login();
+const User = new Login();
 
-// User.getAll().then(asdas => {
-// 	console.log("estoy intentando obtener mis usuarios: ", asdas);
-// });
+User.getAll().then(asdas => {
+	console.log("estoy intentando obtener mis usuarios: ", asdas);
+});
 
 app.set("view engine", "hbs");
 app.set("views", "./src/views/layouts");

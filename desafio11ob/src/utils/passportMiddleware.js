@@ -1,6 +1,9 @@
 const bcrypt = require("bcrypt");
 const passport = require("passport");
+
 const LocalStrategy = require("passport-local").Strategy;
+const UserContainer = require("../daos/login/LoginDaoMongoDB.js");
+const User = new UserContainer();
 
 // ---------------------- Utils -----------------------
 const isValidPassword = async (userPassword, password) => {
