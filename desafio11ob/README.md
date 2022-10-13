@@ -1,4 +1,4 @@
-# Desafío obligatorio 12: Usando el objeto process
+# Desafío obligatorio 11: Inicio de sesión
 
 #### Backend CoderHouse
 
@@ -9,16 +9,17 @@ npm install
 nodemon server.js
 ```
 
-- Sobre el proyecto del último desafío entregable, mover todas las claves y credenciales utilizadas a un archivo .env, y cargarlo mediante la librería dotenv.
-  - La única configuración que no va a ser manejada con esta librería va a ser el puerto de escucha del servidor. Éste deberá ser leído de los argumento pasados por línea de comando, usando alguna librería (minimist o yargs). En el caso de no pasar este parámetro por línea de comandos, conectar por defecto al puerto 8080.
-- Agregada la ruta "/info", que presenta en una vista sencilla los siguientes datos:
-  - Argumentos de entrada
-  - Path de ejecución
-  - Nombre de la plataforma (sistema operativo)
-  - Process id
-  - Versión de node.js
-  - Carpeta del proyecto
-  - Memoria total reservada (rss)
-- Agregada ruta '/api/randoms' que calcula un cantidad de números aleatorios en el rango del 1 al 1000 especificada por parámetros de consulta (query).
+- El endpoint está en puerto 8080.
+- En /register se registra un usuario con su email y contraseña.
+  - Se persiste en Mongo, en una colección nueva de Usuarios.
+- La clave se encripta con bcrypt.
+- En /login se pide email y contraseña y se autentica a través de una strat de passport.
+- Tanto en /register como en /login hay un botón para redirigir al otro endpoint.
+- Una vez logeado, se redirige a /home, donde se muestra el email y un botón de logout.
+- La sesión se mantiene 10 minutos y en cada recarga se reinicia el tiempo.
+- Vistas de error de login y register.
+  - Registro: Usuario ya registrado.
+  - Login: Usuario no registrado o contraseña incorrecta.
+- Todo lo demás se mantiene tal y como estaba en la segunda entraga de proyecto.
 
 ### Isabel Achurra, 2022.
