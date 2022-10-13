@@ -1,5 +1,6 @@
 const express = require("express");
 require("dotenv").config();
+const { argv, platform, version, memoryUsage, cwd, pid, execPath } = process;
 const handlebars = require("express-handlebars");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
@@ -36,6 +37,12 @@ let Productos = new Producto();
 const Logins = new Login();
 const Chats = new Chat();
 
+// const User = new Login();
+
+// User.getAll().then(asdas => {
+// 	console.log("estoy intentando obtener mis usuarios: ", asdas);
+// });
+
 app.set("view engine", "hbs");
 app.set("views", "./src/views/layouts");
 
@@ -62,14 +69,12 @@ app.use(
 		secret: "secreto",
 		resave: false,
 		rolling: true,
+		saveUninitialized: false,
 		cookie: {
-			htppOnly: false,
+			httpOnly: false,
 			secure: false,
 			maxAge: 90000
-		},
-		rolling: true,
-		resave: true,
-		saveUninitialized: false
+		}
 	})
 );
 
@@ -104,8 +109,7 @@ app.post(
 	}),
 
 	(req, res) => {
-		const { user } = req.user;
-		res.redirect("/");
+		res.render("/", { username: req.body.username });
 	}
 );
 // -------- LOGIN-FIN --------------
@@ -123,8 +127,7 @@ app.post(
 		successRedirect: "login"
 	}),
 	(req, res) => {
-		const user = req.user;
-		res.redirect("/");
+		res.render("/login", { username: req.body.username });
 	}
 );
 // -------- REGISTER-FIN -----------
@@ -308,7 +311,22 @@ io.on("connection", async socket => {
 		return (mensajesChat = await Chats.getAll());
 	});
 });
-// ---------------------------- FIN
+// ---------------------------- FIN CARRITO -------------
+
+// ----- INFO PAGE ----
+app.get("/info", (req, res) => {
+	const arguments = argv.slice(2).join(" || ");
+
+	res.render("info", {
+		execArgv: arguments.length ? arguments : "Ninguno",
+		platform,
+		version,
+		memoryUsage: memoryUsage().rss,
+		cwd: cwd(),
+		pid,
+		execPath
+	});
+});
 
 //--------- listener
 httpServer.listen(PORT, () => {
