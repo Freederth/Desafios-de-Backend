@@ -7,7 +7,7 @@ const User = new UserContainer();
 
 // ---------------------- Utils -----------------------
 const isValidPassword = async (userPassword, password) => {
-	return bcrypt.compareSync(password, userPassword);
+	return bcrypt.compare(password, userPassword);
 };
 
 const createHash = async password => {
@@ -29,23 +29,17 @@ passport.deserializeUser(async function (id, done) {
 // ------------- Passport Middlewares -----------------
 passport.use(
 	"login",
-	new LocalStrategy(
-		{
-			usernameField: "username",
-			passwordField: "password"
-		},
-		async (username, password, done) => {
-			try {
-				const user = User.getByUser(username);
-				if (!user) return done(null, false, { message: "user not found" });
-				if (!(await isValidPassword(user.password, password)))
-					done(null, false, { message: "wrong password" });
-				return done(null, user);
-			} catch (err) {
-				return done(err, { message: "internal error" });
-			}
+	new LocalStrategy(async (username, password, done) => {
+		try {
+			const user = User.getByUser(username);
+			if (!user) return done(null, false, { message: "user not found" });
+			if (!(await isValidPassword(user.password, password)))
+				done(null, false, { message: "wrong password" });
+			return done(null, user);
+		} catch (err) {
+			return done(err, { message: "internal error" });
 		}
-	)
+	})
 );
 
 passport.use(
@@ -56,7 +50,7 @@ passport.use(
 			passwordField: "password",
 			passReqToCallback: true
 		},
-		async (username, password, done) => {
+		async (req, username, password, done) => {
 			try {
 				let user = await User.getByUser(username);
 
