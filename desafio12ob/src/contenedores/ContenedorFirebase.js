@@ -19,11 +19,12 @@ class ContenedorFirebase {
 
 	async save(obj) {
 		try {
-			let guardar = await this.query.add(obj);
-			return guardar.id;
+			const doc = this.query.doc(`${obj.id}`);
+			let item = await doc.create(obj);
+			console.log("Mensaje agregado");
+			return item;
 		} catch (error) {
-			console.log(`error al guardar: ${error}`);
-		} finally {
+			console.log(error);
 		}
 	}
 

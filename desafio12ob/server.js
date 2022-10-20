@@ -7,8 +7,6 @@ const session = require("express-session");
 const cp = require("cookie-parser");
 const { fork } = require("child_process");
 
-const calculoPesado = require("./src/utils/calculo");
-
 const app = express();
 
 // --- WEBSOCKET
@@ -41,10 +39,6 @@ const Logins = new Login();
 const Chats = new Chat();
 
 const User = new Login();
-
-User.getAll().then(asdas => {
-	console.log("estoy intentando obtener mis usuarios: ", asdas);
-});
 
 app.set("view engine", "hbs");
 app.set("views", "./src/views/layouts");
