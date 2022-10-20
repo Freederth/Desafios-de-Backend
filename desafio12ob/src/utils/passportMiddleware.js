@@ -6,46 +6,47 @@ const UserContainer = require("../daos/login/LoginDaoMongoDB.js");
 const User = new UserContainer();
 
 // ---------------------- Utils -----------------------
-const isValidPassword = async (userPassword, password) => {
-	return bcrypt.compareSync(password, userPassword);
+const isValidPassword = (user, password) => {
+	return bcrypt.compareSync(password, user.password);
 };
 
-const createHash = async password => {
-	return bcrypt.hash(password, await bcrypt.genSalt(10), null);
+const createHash = password => {
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(10), null);
 };
 
 // ----------------- Serializers ----------------------
-passport.serializeUser(function (user, done) {
-	console.log("serialize");
-	done(null, user._id);
+passport.serializeUser((user, done) => {
+	console.log("serializing...");
+	done(null, user);
 });
 
-passport.deserializeUser(async function (id, done) {
-	console.log("deserialize");
-	const user = await User.getById(id);
+passport.deserializeUser((id, done) => {
+	console.log("deserializing...");
+	const user = User.getById(id);
 	done(null, user);
 });
 
 // ------------- Passport Middlewares -----------------
 passport.use(
 	"login",
-	new LocalStrategy(
-		{
-			usernameField: "username",
-			passwordField: "password"
-		},
-		async (username, password, done) => {
-			try {
-				const user = User.getByUser(username);
-				if (!user) return done(null, false, { message: "user not found" });
-				if (!(await isValidPassword(user.password, password)))
-					done(null, false, { message: "wrong password" });
-				return done(null, user);
-			} catch (err) {
-				return done(err, { message: "internal error" });
+	new LocalStrategy(async (username, password, done) => {
+		try {
+			const user = await User.getByUser(username);
+
+			if (!user) {
+				console.error(`Usuario ${username} no encontrado`);
+				return done(null, false, { message: "Usuario no encontrado" });
 			}
+			// Validación de contraseña
+			if (!isValidPassword(user, password)) {
+				console.error("Contraseña incorrecta");
+				return done(null, false, { message: "Contraseña incorrecta" });
+			}
+			done(null, user);
+		} catch (err) {
+			return done(err, { message: "internal error" });
 		}
-	)
+	})
 );
 
 passport.use(
@@ -56,28 +57,24 @@ passport.use(
 			passwordField: "password",
 			passReqToCallback: true
 		},
-		async (username, password, done) => {
+		async (req, username, password, done) => {
 			try {
 				let user = await User.getByUser(username);
 
 				if (user) {
 					console.log(`El usuario ${username} ya existe`);
-					return done(null, user.username, { message: "user ya existe" });
+					return done(null, false, { message: "user ya existe" });
 				} else {
 					const newUser = {
 						username: username,
 						password: createHash(password)
 					};
-					try {
-						await User.save(newUser);
-					} catch (error) {
-						console.error(error);
-					}
+					await User.save(newUser);
 
 					return done(null, newUser);
 				}
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				return done(err, { message: "internal error" });
 			}
 		}
 	)
