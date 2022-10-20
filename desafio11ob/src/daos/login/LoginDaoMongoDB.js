@@ -21,10 +21,7 @@ class LoginDaoMongoDB extends ContenedorMongodb {
 		const doc = await this.modelo.findOne({ username });
 		if (!doc) return null; //si no hay nada null
 		// retornar el objeto completo
-		return {
-			_id: doc._id,
-			username: doc.username
-		};
+		return doc;
 	}
 }
 

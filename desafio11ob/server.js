@@ -1,13 +1,9 @@
 const express = require("express");
 require("dotenv").config();
-const { argv, platform, version, memoryUsage, cwd, pid, execPath } = process;
 const handlebars = require("express-handlebars");
 const MongoStore = require("connect-mongo");
 const session = require("express-session");
 const cp = require("cookie-parser");
-const { fork } = require("child_process");
-
-const calculoPesado = require("./src/utils/calculo");
 
 const app = express();
 
@@ -42,9 +38,9 @@ const Chats = new Chat();
 
 const User = new Login();
 
-User.getAll().then(asdas => {
-	console.log("estoy intentando obtener mis usuarios: ", asdas);
-});
+// User.getAll().then(asdas => {
+// 	console.log("estoy intentando obtener mis usuarios: ", asdas);
+// });
 
 app.set("view engine", "hbs");
 app.set("views", "./src/views/layouts");
@@ -148,10 +144,13 @@ app.get("/faillogin", (req, res) => {
 });
 
 // logout
-app.get("/logout", async (req, res) => {
-	// metodo debe ser delete
-	req.logOut();
-	res.render("index");
+app.get("/logout", async (req, res = response, next) => {
+	req.logout(err => {
+		if (err) {
+			return next(err);
+		}
+		res.redirect("/");
+	});
 });
 
 // -------- PARTE PRODUCTOS -- INICIO ---------------
