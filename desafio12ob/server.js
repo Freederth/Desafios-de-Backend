@@ -148,10 +148,13 @@ app.get("/faillogin", (req, res) => {
 });
 
 // logout
-app.get("/logout", async (req, res) => {
-	// metodo debe ser delete
-	req.logOut();
-	res.render("index");
+app.get("/logout", async (req, res = response, next) => {
+	req.logout(err => {
+		if (err) {
+			return next(err);
+		}
+		res.redirect("/");
+	});
 });
 
 // -------- PARTE PRODUCTOS -- INICIO ---------------
