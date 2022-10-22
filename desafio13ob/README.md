@@ -9,24 +9,65 @@ npm install
 nodemon server.js
 ```
 
-- Sobre el proyecto del último desafío entregable, agregamos un parámetro más en el comando, que permita ejecutar el servidor en modo fork o cluster.
-  - Si el parámetro es "FORK", se ejecuta el servidor en modo fork.
-  - Si el parámetro es "CLUSTER", se ejecuta el servidor en modo cluster.
-- Agregamos a la vista info, el número de procesadores presentes en el servidor.
-- Ejecutamos con nodemon y forever verificando el número de procesos tomados por node.
-  - Listar procesos por Forever y por sistema operativo.
-  - Ejecutamos servidor utilizando PM2 en modo fork y cluster. Listamos procesos por PM2 y por sistema operativo.
-  - Permitir que en Forever y PM2 se utilice el modo escucha.
-  - Pruebas de finalización de procesos fork y cluster.
-- Configurar Nginx para balancear cargas de servidor de la siguiente manera:
-  - Redirigir las consultas a /api/randoms a un cluster de servidores escuchando puerto 8081.
-  - En resto de las consultas, redirigir a servidor individual en puerto 8080.
-  - Luego modificar la configuración para que todas las consultas a /api/randoms sean redirigidas a un cluster de servidores gestionado desde nginx, repartiéndolas equitativamente entre 4 instancias escuchando en los puertos 8082, 8083, 8084 y 8085 respectivamente.
-- Entregar:
-  - Archivo de configuración de Nginx.
-  - Documento donde se detallen los comandos que deben ejecutarse por línea de commndos y los argumentos que deben enviarse para levantar todas las instancias de servidores de modo que soporten la configuración detallada en los puntos anteriores. Ejemplo:
-    - pm2 start ./miservidor.js -- --port=8080 --modo=fork
-    - pm2 start ./miservidor.js -- --port=8081 --modo=cluster
-    - pm2 start ./miservidor.js -- --port=8082 --modo=fork
+- Para levantar el modo FORK
+
+```
+pm2 start server.js --name="server fork" --watch -- -p 8080
+```
+
+- GET /api/randoms/:cant para obtener una cantidad de números aleatorios.
+- GET /info ahora muestra la cantidad de núcleos de la máquina.
+
+-Para levantar el resto en modo cluster
+
+```
+pm2 start server.js --name="Server Cluster" -i max --watch -- 8080
+```
+
+#### Configuración NGINX
+
+```
+#user  nobody;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+
+
+events {
+  worker_connections  1024;
+}
+
+
+http {
+  include       mime.types;
+  default_type  application/octet-stream;
+  server {
+      location / {
+          proxy_pass http://localhost:8080;
+      }
+      listen       80;
+      server_name  nginx_node;
+      root         ../Coderhouse/server;
+
+      location /info {
+          proxy_pass http://localhost:8080/info;
+          index server.js;
+      }
+      location /random {
+          proxy_pass http://localhost:8080/api/randoms;
+          index server.js;
+      }
+
+      error_page   500 502 503 504  /50x.html;
+      location = /50x.html {
+          root   html;
+      }
+  }
+}
+```
 
 ### Isabel Achurra, 2022.

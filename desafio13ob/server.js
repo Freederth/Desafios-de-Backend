@@ -6,6 +6,8 @@ const MongoStore = require("connect-mongo");
 const session = require("express-session");
 const cp = require("cookie-parser");
 const { fork } = require("child_process");
+const cluster = require("cluster");
+const numCPUs = require("os").cpus().length;
 
 const app = express();
 
@@ -315,7 +317,8 @@ app.get("/info", (req, res) => {
 		memoryUsage: memoryUsage().rss,
 		cwd: cwd(),
 		pid,
-		execPath
+		execPath,
+		numCPUs
 	});
 });
 
