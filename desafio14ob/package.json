@@ -1,0 +1,28 @@
+{
+	"name": "Backend",
+	"description": "- Endpoint en la ruta \"localhost:8080\"\r - Implementado CRUD en fs, mongo y firebase\r   - Para diferenciar entre cada tipo de función, uso la la variable de entorno DAO, que puede tener 3 valores: \"FS\" (filesystem), \"MONGO\" (mongoDB) y \"FB\" (firebase).\r - Están los DAOS para cada tipo de base de datos.\r - Se sigue el patrón de diseño entregado en el ejemplo.",
+	"version": "1.0.0",
+	"main": "server.js",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"keywords": [],
+	"author": "@freederth",
+	"license": "ISC",
+	"dependencies": {
+		"@faker-js/faker": "^7.5.0",
+		"bcrypt": "^5.1.0",
+		"connect-mongo": "^4.6.0",
+		"cookie-parser": "^1.4.6",
+		"dotenv": "^16.0.2",
+		"express": "^4.18.1",
+		"express-handlebars": "^6.0.6",
+		"express-session": "^1.17.3",
+		"firebase-admin": "^11.1.0",
+		"mongoose": "^6.6.5",
+		"passport": "^0.6.0",
+		"passport-local": "^1.0.0",
+		"pm2": "^5.2.2",
+		"socket.io": "^4.5.2"
+	}
+}
