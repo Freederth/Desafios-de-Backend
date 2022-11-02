@@ -33,9 +33,6 @@ const PORT = process.env.PORT || 8080;
 const productosRandoms = generadorProductos();
 const { Carrito, Producto, Login, Chat } = require("./src/daos/index.js");
 
-// minimist
-const minimist = require("minimist");
-
 // LOG4JS
 const logger = require("./src/logs/loggers");
 
@@ -81,12 +78,6 @@ app.use(
 		}
 	})
 );
-
-// logger
-app.use((req,res,next)=>{
-	logger.warn("NONE EXISTING URL");
-	res.sendStatus('404')
-  })
 
 // Passport
 app.use(passport.initialize());
@@ -334,32 +325,6 @@ app.get("/info", (req, res) => {
 	});
 });
 
-if (mode === "fork") {
-	app.use("/api", routerRandom);
-	httpServer.listen(port, () => {
-	  console.log(
-		`Corriendo en modo Fork en el puerto http://localhost:${port} en modo  ${process.env.NODE_ENV}`
-	  );
-	});
-  }
-  if (mode === "cluster") {
-	if (isMaster) {
-	  for (let i = 0; i < cpus; i++) {
-		cluster.fork();
-	  }
-	  cluster.on("exit", (worker) => {
-		console.log(`Process with id: ${worker.process.pid} finished`);
-	  });
-	} else {
-	  app.use("/test", routerCluster);
-	  httpServer.listen(port, () => {
-		console.log(
-		  `Corriendo en modo Cluster en el puerto http://localhost:${port} en modo ${process.env.NODE_ENV}`
-		);
-	  });
-	}
-  }
-
 // ----- Random PAGE ----
 app.get("/api/randoms", (req, res) => {
 	let { cant } = req.query;
@@ -369,6 +334,11 @@ app.get("/api/randoms", (req, res) => {
 	random.on("message", obj => {
 		res.json(obj);
 	});
+});
+// logger
+app.use((req, res, next) => {
+	logger.warn("NONE EXISTING URL");
+	res.sendStatus("404");
 });
 
 //--------- listener
