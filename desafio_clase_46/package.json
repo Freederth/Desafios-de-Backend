@@ -1,12 +1,21 @@
 {
-  "name": "desafio_clase_46",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+	"name": "desafio_clase_46",
+	"version": "1.0.0",
+	"description": "",
+	"main": "app.js",
+	"scripts": {
+		"start": "node ./src/app.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"dotenv": "^16.0.3",
+		"koa": "^2.14.1",
+		"koa-body": "^6.0.1",
+		"koa-bodyparser": "^4.3.0",
+		"koa-router": "^12.0.0",
+		"mongodb": "^4.12.1"
+	}
 }
