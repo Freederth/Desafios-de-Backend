@@ -12,4 +12,4 @@ app.use(bodyParser());
 app.use(productRoutes.routes()).use(productRoutes.allowedMethods());
 
 app.listen(PORT);
-console.log(`Application is running on port ${PORT}`);
+console.log(`Servidor corriendo en el puerto ${PORT}`);
