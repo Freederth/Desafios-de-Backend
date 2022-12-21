@@ -1,0 +1,22 @@
+<body>
+    <h1>FORMULARIO COLORES</h1>
+    <form action="/" method="POST">
+        <input type="text" name="color" placeholder="colour" />
+        <button type="submit">Enviar</button>
+    </form>
+    <ul>
+        <% if(colors) {%>
+            <% colors.forEach(color=> { %>
+                <% if(color==="black" ) { %>
+                    <li style="background-color: whitesmoke; color: <%= color %>">
+                        <%= color %>
+                    </li>
+                    <% } else {%>
+                        <li style="background-color: rgb(255, 0, 0); color: <%= color %>">
+                            <%= color %>
+                        </li>
+                        <% } %>
+                            <% }) %>
+                                <% } %>
+    </ul>
+</body>
